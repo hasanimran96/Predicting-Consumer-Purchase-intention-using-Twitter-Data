@@ -1,10 +1,12 @@
-import pandas as pd
-import numpy as np
-import nltk
-from sklearn.naive_bayes import MultinomialNB
 import re
+
+import numpy as np
+import pandas as pd
+
+import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from sklearn.naive_bayes import MultinomialNB
 
 
 def text_concat():
@@ -43,7 +45,7 @@ def make_unique_li(li_cleanText):
     return unique_word_li
 
 
-df = pd.read_csv("D:/DATA/Sem8/fyp/AnnotatedData.csv")
+df = pd.read_csv("AnnotatedData.csv")
 # create series of true and false. True is assigned for yes/no. False for undefine
 defined = df["Purchase Intention"] != "undefined"
 # output dataframe without undeined
