@@ -15,7 +15,7 @@ def text_concat():
 
 
 def removeStopWords(text):
-    stop_words = set(stopwords.words('english'))
+    stop_words = set(stopwords.words("english"))
     word_tokens = word_tokenize(text)
     filtered_sentence = []
     for w in word_tokens:
@@ -26,7 +26,7 @@ def removeStopWords(text):
 
 
 def removePunc(eachText):
-    remove_punc = re.sub(r'[^\w\s]', '', eachText)
+    remove_punc = re.sub(r"[^\w\s]", "", eachText)
     # return corpus with out punctuation.
     return remove_punc
 
@@ -43,9 +43,9 @@ def make_unique_li(li_cleanText):
     return unique_word_li
 
 
-df = pd.read_csv('D:/DATA/Sem8/fyp/AnnotatedData.csv')
+df = pd.read_csv("D:/DATA/Sem8/fyp/AnnotatedData.csv")
 # create series of true and false. True is assigned for yes/no. False for undefine
-defined = df['Purchase Intention'] != "undefined"
+defined = df["Purchase Intention"] != "undefined"
 # output dataframe without undeined
 df2 = df[defined]
 # replace no PI with no
@@ -54,7 +54,7 @@ df3 = df2.replace("No PI", "no")
 final_df = df3.replace("PI", "yes")
 
 # create series of true and false. False is assigned for yes/no. True is for undefined
-undefined = df['Purchase Intention'] == "undefined"
+undefined = df["Purchase Intention"] == "undefined"
 # output dataframe without undeined
 df3 = df[undefined]
 
