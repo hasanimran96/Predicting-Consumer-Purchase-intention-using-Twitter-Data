@@ -1,0 +1,14 @@
+scrapy crawl TweetScraper -a query="'iphone x', purchase OR buy OR wish OR w
+ant OR need OR like OR love OR affordable OR deal OR nice OR awesome OR get OR cheap OR bad OR hate OR 'won't buy' OR 'don't buy' OR dislike OR boring OR useless OR 'not recommended' OR 'not worth it' OR -accessories -case"
+
+
+scrapy crawl TweetScraper -a query="iphone x OR iphonex,purchase OR buy OR wish OR w
+ant OR need OR like OR love OR affordable OR deal OR nice OR awesome OR get OR hate OR bad OR dislike OR boring OR useless -accessories -case -cover until:2017-11-17" 
+
+
+Positive words before Release:
+scrapy crawl TweetScraper -a query="iphone x OR iphonex,purchase OR buy OR wish OR w
+ant OR need OR like OR love OR affordable OR deal OR nice OR awesome OR get -accessories -case -cover until:2017-11-17" 
+
+Negative words Before Release:
+scrapy crawl TweetScraper -a query="iphone x OR iphonex,hate OR bad OR dislike OR boring OR useless OR expensive -accessories -case -cover until:2017-11-17" 
