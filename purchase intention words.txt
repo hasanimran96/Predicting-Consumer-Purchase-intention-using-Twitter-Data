@@ -38,6 +38,10 @@ To remove
 accessories
 case
 --------------------
+
+Relevant Query 18/3/2019:
+scrapy crawl TweetScraper -a query="iphone x, purchase OR buy OR wish OR want OR need OR like OR love OR affordable OR deal OR nice OR get OR cheap -accessories -case"
+---------------------------------------------------------
 ___________________________
 iPhone X/First released
 November 3, 2017
