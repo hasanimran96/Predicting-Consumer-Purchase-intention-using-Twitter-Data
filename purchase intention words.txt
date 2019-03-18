@@ -21,6 +21,12 @@ No PI
 bad
 hate
 won't buy
+dislike
+don't buy
+boring
+useless
+not recommended
+not worth it
 --------------------
 
 To remove
