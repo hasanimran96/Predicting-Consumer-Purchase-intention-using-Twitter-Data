@@ -1,0 +1,6 @@
+Points discussed:
+Find a paper through sentiment analysis survey and choose it for your implementation.
+Find if a deep learning model can be used or not.
+Annotated 600 tweets up till now, annotate 400 more to get a total of 1000 annotated tweets.
+Applied basic preprocessing on tweets.
+Search a dictionary for sentiment analysis and research how it can be used in for your task.
