@@ -1,0 +1,14 @@
+Criteria for Labelling of tweets
+
+SN	Question									Class Label
+1	Comparing iphone x with other phone and telling other phone are better?		No PI
+2	Asking about fault in iphone x which he  had and asking Tech team for help?	Undefined
+3	Talking about good features of iphone x?					PI (only if has not bought it yet) 											otherwise Undefined
+4	Talking about negative features of iphone x?					No PI (only if has not bought it 											yet) otherwise Undefined
+5	liked video on Youtube about iphone x?						PI
+6	Have iphone x but want to trade with other phone?				Undefined
+7	Person asked to win iphone x in competition?					Undefined but if tweet is about 											retweeting to win then PI
+8	Person have iphone x and is proudly showing to public?				Undefined (crawl tweet history of 											the user)
+9	Buying assesories for iphone x protection like hard case?			Undefined (crawl tweet history of 											the user)
+10	got public following on social meidia when i bought iphone x?			Undefined (crawl tweet history of 											the user)
+11
