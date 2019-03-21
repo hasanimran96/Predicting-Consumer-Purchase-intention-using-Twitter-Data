@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\HASAN\\AppData\\Local\\Programs\\Python\\Python36-32\\python.exe",
+    "python.pythonPath": "/usr/bin/python3",
     "python.linting.pylintEnabled": true,
     "python.formatting.provider": "black"
 }
