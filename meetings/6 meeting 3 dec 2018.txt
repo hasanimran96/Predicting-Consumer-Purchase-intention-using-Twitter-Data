@@ -1,0 +1,4 @@
+1) The layout or the front end of the project is discussed. Assign a score from 0 to 100 to every user based on tweets and classify them into different levels( i.e., from level to level 5).
+2) Prepare for the symposium of FYP I by working on the prototype, poster, process diagram etc.
+3) Try to figure out the maximum information of users. It could be from twitter's account or through other social media's account. And create a profile of a subset of each of the levels of purchase intentions.
+4) Search for unsupervised learning. If you do not find any paper then go for sentiment analysis using unsupervised learning papers.

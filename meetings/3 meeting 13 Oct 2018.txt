@@ -1,0 +1,13 @@
+features to identify
+1. gender
+2. location near to business
+3. age group (completed education in which year)
+4. interests
+5. following pages
+6. hashtags
+7. friends prefrences (check following list)
+
+first phase:
+--> clustering
+
+--> reccurent neural network approach paper (saad)

@@ -1,0 +1,9 @@
+Link to work+datasets,
+
+https://medium.com/analytics-vidhya/customer-review-analytics-using-text-mining-cd1e17d6ee4e
+https://www.kaggle.com/nicapotato/womens-ecommerce-clothing-reviews/home
+https://aip.scitation.org/doi/pdf/10.1063/1.4981598
+https://pdfs.semanticscholar.org/204a/ee5a95e231378c2016c2ea6462d8a405b0f8.pdf
+https://theses.ubn.ru.nl/bitstream/handle/123456789/4370/Oele%2C_M.J.A._1.pdf?sequence=1
+
+Plz go through these papers and summarize their contributions. Forward it to other group members too.

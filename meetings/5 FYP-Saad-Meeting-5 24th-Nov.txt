@@ -1,0 +1,9 @@
+Points discussed,
+
+1) Crawl the data atleast 1000 tweets and try to find out the maximum information about users.
+2) Decided to follow the approach by "Identifying purchase intent from social posts", published in AAAI, 2015.
+
+3) Email the authors of the research papers for dataset
+
+Regards,
+Nida
