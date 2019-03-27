@@ -1,0 +1,10 @@
+1. dictionary based approach
+2. phrase analysis (eg not good/not bad)
+3. majority voting
+4. remove proper nouns
+5. apply different classifiers i.e nueral, SVM, nsive bayes, logistic on TF and TF-IDF vectors
+6. K-fold cross validation
+7. transfer learning
+8. make excel chart for models to include/show changes
+9. make excel sheet for same transfer learning model
+10. rows in excel sheet TF, TF-IDF, DICTIONARY BASED
