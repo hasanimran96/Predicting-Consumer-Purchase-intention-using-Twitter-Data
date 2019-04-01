@@ -1,2 +1,0 @@
-Link
-https://www.kaggle.com/crowdflower/twitter-airline-sentiment#database.sqlite
