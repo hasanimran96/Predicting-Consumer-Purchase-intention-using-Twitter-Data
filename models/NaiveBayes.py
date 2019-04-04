@@ -193,7 +193,7 @@ class NaiveBayesModel:
                     if docVector.iloc[doc_count][temp] < 1:
                         docVector.at[doc_count, temp] += 1
             doc_count += 1
-        print(docVector['good'])
+        # print(docVector['good'])
         return docVector
 
     def WordGivenNoPI(self, tempNegDocVector, uniqueWords):
