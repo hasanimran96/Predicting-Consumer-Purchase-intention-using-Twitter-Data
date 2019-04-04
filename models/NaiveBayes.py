@@ -178,6 +178,24 @@ class NaiveBayesModel:
 
         return docVector
 
+    def binary_docvector(self, final_df, uniqueWords):
+        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
+        docVector1 = pd.DataFrame(data, columns=uniqueWords)
+        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
+        # docVector['Purchase Intention'] = final_df['class']
+        # print(docVector['PurchaseIntention'])
+        doc_count = 0
+        for doc in final_df['text']:
+            words = doc.split()
+            for word in words:
+                temp = word.lower()
+                if temp in docVector.columns:
+                    if docVector.iloc[doc_count][temp] < 1:
+                        docVector.at[doc_count, temp] += 1
+            doc_count += 1
+        print(docVector['good'])
+        return docVector
+
     def WordGivenNoPI(self, tempNegDocVector, uniqueWords):
         data = np.zeros([1, len(uniqueWords)])
         wordGivenNoPI = pd.DataFrame(data, columns=uniqueWords)
@@ -225,7 +243,7 @@ class NaiveBayesModel:
         new_df = self.space(test_data)
         new_corpus_df = self.handle_negation(new_df)
         punc_df = self.remove_punc(new_corpus_df)
-        print(punc_df)
+        # print(punc_df)
 
         # test_data = test_data.assign(PredictedClass= list(test_data['text']))
         # test_data = test_data[['class', 'PredictedClass', 'text']]
