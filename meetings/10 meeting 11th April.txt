@@ -1,0 +1,3 @@
+1. check how to solve imbalance class problem
+    --> use weightage for less class
+2. 
