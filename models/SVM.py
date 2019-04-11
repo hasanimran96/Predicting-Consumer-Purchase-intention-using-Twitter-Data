@@ -1,3 +1,16 @@
+import numpy as np
+import pandas as pd
+from bs4 import BeautifulSoup
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import TweetTokenizer
+
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.pipeline import make_pipeline, Pipeline
@@ -9,6 +22,14 @@ from sklearn.metrics import (
     roc_auc_score,
     recall_score,
     precision_score,
+)
+
+vectorizer = CountVectorizer(
+    analyzer="word",
+    tokenizer=tokenize,
+    lowercase=True,
+    ngram_range=(2, 2),
+    stop_words=en_stopwords,
 )
 
 kfolds = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
