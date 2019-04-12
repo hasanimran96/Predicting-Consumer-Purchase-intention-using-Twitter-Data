@@ -43,7 +43,7 @@ class DataCLean:
     def removeStopWords(self, text):
         # stop_words = set(stopwords.words('english'))
         # stop_words = self.read_stopwords("stopwords.txt")
-        stop_words = self.read_stopwords("stopwords.txt")
+        stop_words = self.read_stopwords("models/stopwords.txt")  # ubuntu/linux
         word_tokens = word_tokenize(text)
         filtered_sentence = []
         for w in word_tokens:

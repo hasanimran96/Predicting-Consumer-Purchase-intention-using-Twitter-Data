@@ -16,13 +16,13 @@ from sklearn.metrics import (
 )
 from sklearn.metrics import confusion_matrix
 
-#------------------------
-#Path declaration
-path = "..\data\AnnotatedData3.csv" #windows
-#path = "../data/AnnotatedData3.csv"  #ubuntu linux
+# ------------------------
+# Path declaration
+# path = "..\data\AnnotatedData3.csv"  # windows
+path = "data/AnnotatedData3.csv"  # ubuntu linux
 
 
-#-------------------------
+# -------------------------
 
 # -------------------------------------------------------------------------
 # -------------------------------------------------------------------------
@@ -120,6 +120,7 @@ def report_results(model, X, y):
     prec = precision_score(y, pred)
     rec = recall_score(y, pred)
     tn, fp, fn, tp = confusion_matrix(y, pred).ravel()
+    TrueNeg = tn / (tn + fp)
     result = {
         "auc": auc,
         "f1": f1,
@@ -130,6 +131,7 @@ def report_results(model, X, y):
         "FP": fp,
         "FN": fn,
         "TP": tp,
+        "True Negative rate": TrueNeg,
     }
     return result
 
