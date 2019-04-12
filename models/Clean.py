@@ -1,6 +1,6 @@
 import pandas as pd
-# import numpy as np
-# import nltk
+import numpy as np
+import nltk
 import re
 # from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -43,7 +43,7 @@ class DataCLean:
 
     def removeStopWords(self,text):
         # stop_words = set(stopwords.words('english'))
-        stop_words = self.read_stopwords("E:/DATA/Sem8/fyp/stopwords.txt")
+        stop_words = self.read_stopwords("../stopwords.txt")
         word_tokens = word_tokenize(text)
         filtered_sentence = []
         for w in word_tokens:
@@ -54,7 +54,7 @@ class DataCLean:
 
     def remove_stopwords(self, df_punc_remove):
         # stop_words = set(stopwords.words('english'))
-        li_stopwords = self.read_stopwords("E:/DATA/Sem8/fyp/stopwords.txt")
+        li_stopwords = self.read_stopwords("../stopwords.txt")
         # print(stop_words)
         count_clean = 0
         for text in df_punc_remove['text']:
@@ -149,6 +149,62 @@ class DataCLean:
         li_remove_stopWords = self.removeStopWords(remove_punc)
         # print(li_remove_stopWords)
         return li_remove_stopWords
+
+    def DocVector(self, final_df, uniqueWords):
+        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
+        docVector1 = pd.DataFrame(data, columns=uniqueWords)
+        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
+        # docVector['Purchase Intention'] = final_df['class']
+        # print(docVector['PurchaseIntention'])
+        doc_count = 0
+        for doc in final_df['text']:
+            words = doc.split()
+            for word in words:
+                temp = word.lower()
+                if temp in docVector.columns:
+                    docVector.at[doc_count, temp] += 1
+            doc_count += 1
+
+        return docVector
+
+    
+    def binary_docvector(self, final_df, uniqueWords):
+        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
+        docVector1 = pd.DataFrame(data, columns=uniqueWords)
+        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
+        # docVector['Purchase Intention'] = final_df['class']
+        # print(docVector['PurchaseIntention'])
+        doc_count = 0
+        for doc in final_df['text']:
+            words = doc.split()
+            for word in words:
+                temp = word.lower()
+                if temp in docVector.columns:
+                    if docVector.iloc[doc_count][temp] < 1:
+                        docVector.at[doc_count, temp] += 1
+            doc_count += 1
+        # print(docVector['good'])
+        return docVector
+
+    def tf_idf(self, corpus, df_cleaned_text):
+        unique = list(set(corpus.split()))
+        # print(unique)
+        # tfIdf_df = pd.DataFrame(columns=unique)
+        tf_df = self.DocVector(df_cleaned_text,unique)
+        # idf_df = pd.DataFrame()
+        total_docs = len(tf_df.index)
+        for column in unique:
+            num_doc_word = 0
+            for no_doc in range(total_docs):
+                if tf_df.at[no_doc, column] != 0:
+                    num_doc_word += 1
+            idf = math.log(total_docs / num_doc_word)
+            # idf_df.at[0,column] = idf
+            tf_df[column] = tf_df[column].multiply(idf)
+            idf = 0
+        # print(tf_df['buy'])
+        return tf_df        
+    
 
     def make_unique_li(self, li_cleanText):
         unique_words_set = set(li_cleanText)
