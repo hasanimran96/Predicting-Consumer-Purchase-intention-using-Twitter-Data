@@ -5,3 +5,7 @@
     2. SVM
     3. DT
     4. NN
+    by using same clean data function
+3. different document vectors made using TF, TF-IDF, BINARY
+4. start writing about data cleaning methods in research paper
+5. implement SVM with the same clean data function as binary naive bayes
