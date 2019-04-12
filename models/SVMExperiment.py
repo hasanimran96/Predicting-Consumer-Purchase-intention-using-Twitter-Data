@@ -1,7 +1,7 @@
 import pandas as pd
 import Clean as cl
 from sklearn import svm
-from sklearn.cross_validation import train_test_split
+#from sklearn.cross_validation import train_test_split
 from sklearn import model_selection, naive_bayes
 import numpy as np
 
