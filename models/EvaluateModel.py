@@ -36,3 +36,6 @@ class Evaluate:
         # print("f measure",F1)
         return F1
 
+    def TrueNegative(self, TN, FP):
+        TrueNeg = TN/(TN+FP)
+        return TrueNeg
