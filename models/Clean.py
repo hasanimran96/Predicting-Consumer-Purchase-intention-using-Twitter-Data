@@ -42,7 +42,7 @@ class DataCLean:
 
     def removeStopWords(self, text):
         # stop_words = set(stopwords.words('english'))
-        # stop_words = self.read_stopwords("../stopwords.txt")
+        # stop_words = self.read_stopwords("stopwords.txt")
         stop_words = self.read_stopwords("stopwords.txt")
         word_tokens = word_tokenize(text)
         filtered_sentence = []
@@ -54,7 +54,7 @@ class DataCLean:
 
     def remove_stopwords(self, df_punc_remove):
         # stop_words = set(stopwords.words('english'))
-        li_stopwords = self.read_stopwords("../stopwords.txt")
+        li_stopwords = self.read_stopwords("stopwords.txt")
         # print(stop_words)
         count_clean = 0
         for text in df_punc_remove["text"]:

@@ -16,6 +16,14 @@ from sklearn.metrics import (
 )
 from sklearn.metrics import confusion_matrix
 
+#------------------------
+#Path declaration
+path = "..\data\AnnotatedData3.csv" #windows
+#path = "../data/AnnotatedData3.csv"  #ubuntu linux
+
+
+#-------------------------
+
 # -------------------------------------------------------------------------
 # -------------------------------------------------------------------------
 # -------------------------------------------------------------------------
@@ -59,8 +67,7 @@ def convert_to_0_or_1(Y):
 # -------------------------------------------------------------------------
 # Training
 
-# path = "../data/AnnotatedData3.csv"
-path = "data/AnnotatedData3.csv"
+
 X, Y = SVM(path)
 
 a = np.size(X, 0)
