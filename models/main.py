@@ -6,14 +6,10 @@ import Clean as cn
 
 def naive_bayes():
     model = nb.NaiveBayesModel()
-    clean = cn.DataCLean()
-    path = 'E:/DATA/Sem8/fyp/Training.csv'
-    final_df, df = clean.extract('E:/DATA/Sem8/fyp/Training.csv')
-    # corpus = model.text_concat(final_df)
-    li_clean_text = clean.clean_data(final_df)
-    uniqueWords = clean.make_unique_li(li_clean_text)
+    df_clean, uniqueWords = Clean()
     # print(uniqueWords)
-    docVector = model.DocVector(final_df, uniqueWords)
+    clean = cn.DataCLean()
+    docVector = model.DocVector(df_clean, uniqueWords)
     df_WordGivenPI,df_WordGivenNoPi,Prob_PI,Prob_NoPI,numWordsInPI,numWordsInNoPI = model.TrainModel(docVector, uniqueWords)
     predict_df, test_data = model.Predict(Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,clean)
 
@@ -27,18 +23,21 @@ def naive_bayes():
     print("True Negative = ", stats.TrueNegative(TN, FP))
     print("---------------------------------------------------------------------")
 
-def text_blob():
-    model = nb.NaiveBayesModel()
+def Clean():
     clean = cn.DataCLean()
     path = 'E:/DATA/Sem8/fyp/Training.csv'
     final_df, df = clean.extract('E:/DATA/Sem8/fyp/Training.csv')
     # corpus = clean.text_concat(final_df)
-    li_clean_text = clean.clean_data(final_df)
-    print("ammar")
+    li_clean_text, df_clean = clean.clean_data(final_df)
+    # print("ammar")
     uniqueWords = clean.make_unique_li(li_clean_text)
+    return df_clean, uniqueWords
 
-    docVector = model.DocVector(final_df, uniqueWords)
-
+def text_blob():
+    model = nb.NaiveBayesModel()
+    df_clean, uniqueWords = Clean()
+    docVector = model.DocVector(df_clean, uniqueWords)
+    clean = cn.DataCLean()
     polarity_docVector = tb.text_blob(docVector, uniqueWords)
     # print(polarity_docVector['bad'])
     df_WordGivenPI, df_WordGivenNoPi, Prob_PI, Prob_NoPI, numWordsInPI, numWordsInNoPI = model.TrainModel(polarity_docVector, uniqueWords)
@@ -56,17 +55,12 @@ def text_blob():
 
 def binary_naive_bayes():
     model = nb.NaiveBayesModel()
+    df_clean, uniqueWords = Clean()
     clean = cn.DataCLean()
-    # path = 'E:/DATA/Sem8/fyp/Training.csv'
-    final_df, df = clean.extract('E:/DATA/Sem8/fyp/Training.csv')
-    print("saad")
-    li_clean_text = clean.clean_data(final_df)
-    uniqueWords = clean.make_unique_li(li_clean_text)
-    print(uniqueWords)
-    docVector = model.binary_docvector(final_df, uniqueWords)
-    print(docVector)
+    docVector = model.binary_docvector(df_clean, uniqueWords)
+    # print(docVector)
     df_WordGivenPI,df_WordGivenNoPi,Prob_PI,Prob_NoPI,numWordsInPI,numWordsInNoPI = model.TrainModel(docVector, uniqueWords)
-    print("Model Trained")
+    # print("Model Trained")
     predict_df, test_data = model.Predict(Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,clean)
 
     print("--------------Binary Naive Bayes Accuracy Stats---------------------------")
@@ -107,10 +101,10 @@ def binary_naive_bayes_kfold():
         end = end + 200
         df_test, df_train = split(final_df, start, end)
         # print(df_train)
-        li_clean_text = clean.clean_data(df_train)
+        li_clean_text, df_clean = clean.clean_data(df_train)
         uniqueWords = clean.make_unique_li(li_clean_text)
     # # print(uniqueWords)
-        docVector = model.binary_docvector(df_train, uniqueWords)
+        docVector = model.binary_docvector(df_clean, uniqueWords)
         df_WordGivenPI,df_WordGivenNoPi,Prob_PI,Prob_NoPI,numWordsInPI,numWordsInNoPI = model.TrainModel(docVector, uniqueWords)
         predict_df, punc_df = model.Predict_kfold(Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI, df_test,clean)
         # print("--------------Naive Bayes Accuracy Stats---------------------------")
@@ -134,9 +128,31 @@ def binary_naive_bayes_kfold():
     print("f-score = ", Average(fscore))
     print("true negative = ",Average(true_neg))
 
+def tf_idf_naive_bayes():
+    model = nb.NaiveBayesModel()
+    df_clean, uniqueWords = Clean()
+    clean = cn.DataCLean()
+    docVector = model.tf_idf(uniqueWords, df_clean)
+    # print(docVector)
+    df_WordGivenPI, df_WordGivenNoPi, Prob_PI, Prob_NoPI, numWordsInPI, numWordsInNoPI = model.TrainModel(docVector,
+                                                                                                          uniqueWords)
+    # print("Model Trained")
+    predict_df, test_data = model.Predict(Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi,
+                                          numWordsInPI, numWordsInNoPI, clean)
+
+    print("--------------Binary Naive Bayes Accuracy Stats---------------------------")
+    stats = em.Evaluate()
+    TP, FN, TN, FP = stats.confusion_matrix(test_data, predict_df)
+    print("Accuracy = ", stats.Accuracy(TP, TN, FP, FN))
+    print("Precision = ", stats.Precision(TP, FP))
+    print("Recall = ", stats.Recall(TP, FN))
+    print("fScore = ", stats.fScore(TP, FN, FP))
+    print("True Negative = ", stats.TrueNegative(TN, FP))
+    print("---------------------------------------------------------------------")
 
 
-binary_naive_bayes_kfold()
-text_blob()
-naive_bayes()
-binary_naive_bayes()
+# binary_naive_bayes_kfold()
+# text_blob()
+# naive_bayes()
+# binary_naive_bayes()
+tf_idf_naive_bayes()
