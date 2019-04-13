@@ -94,18 +94,20 @@ class NaiveBayesModel:
 
 
     def Predict_kfold(self, Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,df_test, clean):
-        new_df = clean.space(df_test)
-        new_corpus_df = clean.handle_negation(new_df)
-        punc_df = clean.remove_punc(new_corpus_df)
-        # print(punc_df)
-        # test_data = test_data.assign(PredictedClass= list(test_data['text']))
-        # test_data = test_data[['class', 'PredictedClass', 'text']]
-        # print(test_data["text"].count())
+        eng_df = clean.check_english(df_test)
+        # print(eng_df)
+        new_df = clean.space(eng_df)
+        # print("Hello clean data")
+        # print(new_df["text"])
+        df_remove_stopWords = clean.remove_stopwords(new_df)
+        new_corpus_df = clean.handle_negation(df_remove_stopWords)
+        remove_punc_df = clean.remove_punc(new_corpus_df)
+
         predict_df = pd.DataFrame()
         weighPI = Prob_PI
         weighNoPI = Prob_NoPI
         count_test = 0
-        for sentence in punc_df['text']:
+        for sentence in remove_punc_df['text']:
             # print(count_test)
             for word in sentence.lower().split():
                 if word in uniqueWords:
@@ -125,24 +127,29 @@ class NaiveBayesModel:
             count_test += 1
             weighPI = Prob_PI
             weighNoPI = Prob_NoPI
-        return predict_df, punc_df
+        return predict_df, remove_punc_df
 
     def Predict(self, Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,clean):
         test_path = "E:/DATA/Sem8/fyp/test data/Testing.csv"
         test_data, test_df = clean.extract(test_path)
-        new_df = clean.space(test_data)
-        new_corpus_df = clean.handle_negation(new_df)
-        punc_df = clean.remove_punc(new_corpus_df)
-        # print(punc_df)
 
-        # test_data = test_data.assign(PredictedClass= list(test_data['text']))
-        # test_data = test_data[['class', 'PredictedClass', 'text']]
-        # print(test_data["text"].count())
+        eng_df = clean.check_english(test_data)
+        # print(eng_df)
+        df_stem = clean.Stemming(eng_df)
+        new_df = clean.space(df_stem)
+        # print("Hello clean data")
+        # print(new_df["text"])
+
+        df_remove_stopWords = clean.remove_stopwords(new_df)
+
+        new_corpus_df = clean.handle_negation(df_remove_stopWords)
+        remove_punc_df = clean.remove_punc(new_corpus_df)
+
         predict_df = pd.DataFrame()
         weighPI = Prob_PI
         weighNoPI = Prob_NoPI
         count_test = 0
-        for sentence in punc_df['text']:
+        for sentence in remove_punc_df['text']:
             # print(count_test)
             for word in sentence.lower().split():
                 if word in uniqueWords:
@@ -162,11 +169,11 @@ class NaiveBayesModel:
             count_test += 1
             weighPI = Prob_PI
             weighNoPI = Prob_NoPI
-        return predict_df, punc_df
+        return predict_df, remove_punc_df
 
-    def tf_idf(self, corpus, df_cleaned_text):
-        unique = list(set(corpus.split()))
-        # print(unique)
+    def tf_idf(self, unique, df_cleaned_text):
+        # unique = list(set(corpus.split()))
+        # # print(unique)
         # tfIdf_df = pd.DataFrame(columns=unique)
         tf_df = self.DocVector(df_cleaned_text,unique)
         # idf_df = pd.DataFrame()
@@ -174,9 +181,10 @@ class NaiveBayesModel:
         for column in unique:
             num_doc_word = 0
             for no_doc in range(total_docs):
-                if tf_df.at[no_doc, column] != 0:
+                if tf_df.at[no_doc, column] > 0:
                     num_doc_word += 1
-            idf = math.log(total_docs / num_doc_word)
+            # print(num_doc_word)
+            idf = math.log(total_docs / (num_doc_word+1))
             # idf_df.at[0,column] = idf
             tf_df[column] = tf_df[column].multiply(idf)
             idf = 0
