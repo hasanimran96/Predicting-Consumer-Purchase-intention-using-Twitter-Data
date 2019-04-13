@@ -1,6 +1,7 @@
 import pandas as pd
 import Clean as cl
 from sklearn import svm
+import pathConfig as pc  #path config file imported
 
 # from sklearn.cross_validation import train_test_split
 from sklearn import model_selection, naive_bayes
@@ -18,8 +19,7 @@ from sklearn.metrics import confusion_matrix
 
 # -------------------------------------------------------------------------
 # Path declaration
-# path = "..\data\AnnotatedData3.csv"  # windows
-path = "data/AnnotatedData3.csv"  # ubuntu linux
+path = pc.PATH_CONFIG['pathData']  
 # -------------------------------------------------------------------------
 
 

@@ -2,12 +2,17 @@ import pandas as pd
 import numpy as np
 import nltk
 import re
+import pathConfig as pc #import path of stopwords
 
 # from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 # import math
 
+
+#--------------------
+pathStopWords = pc.PATH_CONFIG['pathStopWords']
+#-------------------
 
 class DataCLean:
     def extract(self, path):
@@ -43,7 +48,7 @@ class DataCLean:
     def removeStopWords(self, text):
         # stop_words = set(stopwords.words('english'))
         # stop_words = self.read_stopwords("stopwords.txt")
-        stop_words = self.read_stopwords("models/stopwords.txt")  # ubuntu/linux
+        stop_words = self.read_stopwords(pathStopWords)  # ubuntu/linux
         word_tokens = word_tokenize(text)
         filtered_sentence = []
         for w in word_tokens:
@@ -54,7 +59,7 @@ class DataCLean:
 
     def remove_stopwords(self, df_punc_remove):
         # stop_words = set(stopwords.words('english'))
-        li_stopwords = self.read_stopwords("stopwords.txt")
+        li_stopwords = self.read_stopwords(pathStopWords)
         # print(stop_words)
         count_clean = 0
         for text in df_punc_remove["text"]:
