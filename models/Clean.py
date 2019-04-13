@@ -8,6 +8,13 @@ from nltk.tokenize import word_tokenize
 import enchant
 from stemming.porter2 import stem
 import pathConfig as pc
+
+#--------------------------------
+###Path 
+pathStopwords = pc.PATH_CONFIG['pathStopWords']
+pathData = pc.PATH_CONFIG['pathData']
+#-------------------------------
+
 class DataCLean:
 
     def extract(self, path):
@@ -43,7 +50,7 @@ class DataCLean:
 
     def removeStopWords(self,text):
         # stop_words = set(stopwords.words('english'))
-        stop_words = self.read_stopwords("E:/DATA/Sem8/fyp/stopwords.txt")
+        stop_words = self.read_stopwords(pathStopwords)
         word_tokens = word_tokenize(text)
         filtered_sentence = []
         for w in word_tokens:
@@ -54,7 +61,7 @@ class DataCLean:
 
     def remove_stopwords(self, df_punc_remove):
         # stop_words = set(stopwords.words('english'))
-        li_stopwords = self.read_stopwords("E:/DATA/Sem8/fyp/stopwords.txt")
+        li_stopwords = self.read_stopwords(pathStopwords)
         # print(stop_words)
         count_clean = 0
         for text in df_punc_remove['text']:
@@ -205,8 +212,7 @@ class DataCLean:
         return li_cleanText
 
     def Clean(self):
-        # path = 'E:/DATA/Sem8/fyp/Training.csv'
-        final_df, df = self.extract('E:/DATA/Sem8/fyp/Training.csv')
+        final_df, df = self.extract(pathData)
         # corpus = clean.text_concat(final_df)
         li_clean_text, df_clean = self.clean_data(final_df)
         # print("ammar")

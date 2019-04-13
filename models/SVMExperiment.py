@@ -2,6 +2,7 @@ import pandas as pd
 import Clean as cl
 from sklearn import svm
 import pathConfig as pc  #path config file imported
+import docVector as dv
 
 # from sklearn.cross_validation import train_test_split
 from sklearn import model_selection, naive_bayes
@@ -18,20 +19,14 @@ from sklearn.metrics import (
 from sklearn.metrics import confusion_matrix
 
 # -------------------------------------------------------------------------
-# Path declaration
-path = pc.PATH_CONFIG['pathData']  
-# -------------------------------------------------------------------------
-
-
-# -------------------------------------------------------------------------
 # SVM
-def SVM(path):
+def generatingTrainSet():
     _dcl = cl.DataCLean()
-    final_df, df = _dcl.extract(path)
-    li_clean_text = _dcl.clean_data(final_df)
-    uniqueWords = _dcl.make_unique_li(li_clean_text)
-    docVector = _dcl.DocVector(final_df, uniqueWords)
-
+    final_df, uniqueWords = _dcl.Clean()
+    _dv = dv.DocumentVector()
+    #docVector = _dv.tf_idf(final_df, uniqueWords)
+    #docVector = _dv.DocVector(final_df, uniqueWords)
+    docVector = _dv.binary_docvector(final_df, uniqueWords)
     df = docVector.values
     X_train, Y = df[:, :-1], df[:, -1]
     Y_train = convert_to_0_or_1(Y)
@@ -89,7 +84,7 @@ def convert_to_0_or_1(Y):
 # SPLITTING THE DATA
 # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
 
-X, Y = SVM(path)
+X, Y = generatingTrainSet()
 
 a = np.size(X, 0)
 X_split = int(np.size(X, 0) * 0.7)

@@ -5,7 +5,7 @@ import numpy as np
 
 class DocumentVector:
 
-    def tf_idf(self, unique, df_cleaned_text):
+    def tf_idf(self, df_cleaned_text ,unique):
         # unique = list(set(corpus.split()))
         # # print(unique)
         # tfIdf_df = pd.DataFrame(columns=unique)
