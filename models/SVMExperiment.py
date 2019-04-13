@@ -16,31 +16,22 @@ from sklearn.metrics import (
 )
 from sklearn.metrics import confusion_matrix
 
-# ------------------------
+# -------------------------------------------------------------------------
 # Path declaration
 # path = "..\data\AnnotatedData3.csv"  # windows
 path = "data/AnnotatedData3.csv"  # ubuntu linux
-
-
-# -------------------------
-
 # -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
+
+
 # -------------------------------------------------------------------------
 # SVM
-
-
 def SVM(path):
     _dcl = cl.DataCLean()
     final_df, df = _dcl.extract(path)
-    # corpus = model.text_concat(final_df)
     li_clean_text = _dcl.clean_data(final_df)
     uniqueWords = _dcl.make_unique_li(li_clean_text)
-    # print(uniqueWords)
-    docVector = _dcl.DocVector(
-        final_df, uniqueWords
-    )  ###_dcl.DocVector or _dcl.binary_docvectir
-    ###########################
+    docVector = _dcl.DocVector(final_df, uniqueWords)
+
     df = docVector.values
     X_train, Y = df[:, :-1], df[:, -1]
     Y_train = convert_to_0_or_1(Y)
@@ -48,68 +39,9 @@ def SVM(path):
 
 
 # -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
 
-
-def convert_to_0_or_1(Y):
-    Y_train = []
-    for y in Y:
-        if y == "yes":
-            Y_train.append(1)
-        else:
-            Y_train.append(0)
-    return Y_train
-
-
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# Training
-
-
-X, Y = SVM(path)
-
-a = np.size(X, 0)
-X_split = int(np.size(X, 0) * 0.7)
-
-
-X_train = X[0:X_split]
-Y_train = Y[0:X_split]
-
-X_test = X[X_split:, :]
-Y_test = Y[X_split:]
-
-
-# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
-
-class_weight = {0: 2, 1: 1}
-
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# Applying SVM
-
-# print(Y_train)
-clf = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
-model = clf.fit(X_train, Y_train)
-print(model.score(X_test, Y_test))
-
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
-# Applying Naive Bayes
-
-Naive = naive_bayes.MultinomialNB()
-Naive.fit(X_train, Y_train)
-print(Naive.score(X_test, Y_test))
-
-# -------------------------------------------------------------------------
-# -------------------------------------------------------------------------
 # -------------------------------------------------------------------------
 # statitics
-
-
 def report_results(model, X, y):
     pred_proba = model.predict_proba(X)[:, 1]
     pred = model.predict(X)
@@ -137,9 +69,110 @@ def report_results(model, X, y):
 
 
 # -------------------------------------------------------------------------
+
+
 # -------------------------------------------------------------------------
+def convert_to_0_or_1(Y):
+    Y_train = []
+    for y in Y:
+        if y == "yes":
+            Y_train.append(1)
+        else:
+            Y_train.append(0)
+    return Y_train
+
+
+# -------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------
+# SPLITTING THE DATA
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
+
+X, Y = SVM(path)
+
+a = np.size(X, 0)
+X_split = int(np.size(X, 0) * 0.7)
+
+X_train = X[0:X_split]
+Y_train = Y[0:X_split]
+
+X_test = X[X_split:, :]
+Y_test = Y[X_split:]
+
+class_weight = {0: 2, 1: 1}
+# -------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------
+# Applying SVM
+# print(Y_train)
+clf = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
+model = clf.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------
+# Applying Naive Bayes
+Naive = naive_bayes.MultinomialNB()
+Naive.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------
+# Applying Logistic Regression
+from sklearn import linear_model
+
+logisticReg = linear_model.LogisticRegression(C=1.0)
+logisticReg.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------
+# Applying Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+
+dtc = DecisionTreeClassifier(min_samples_split=7, random_state=252)
+dtc.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+
 # -------------------------------------------------------------------------
 # statitics for SVM
-
 stats = report_results(model, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for SVM")
 print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# statitics for NaiveBayes
+stats = report_results(Naive, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for NaiveBayes")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# statitics for LogisticRegression
+stats = report_results(logisticReg, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for LogisticRegression")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# statitics for DECISION TREE
+stats = report_results(dtc, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for decision tree")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# -------------------------------------------------------------------------
