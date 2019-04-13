@@ -1,0 +1,90 @@
+<!DOCTYPE html 5>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <img src="Picture1.png" style="height:100px;width:100px; margin-bottom: -40px; margin-top: -10px;"></img>
+		</div>
+		<ul class="nav navbar-nav">
+		  <li><a href="page1.html">Home</a></li>
+		  <li class="active"><a href="page2.html">Customer's List</a></li>
+		  <li><a href="page3.html">Potential Customers</a></li>
+		</ul>
+		
+	  </div>
+	</nav>
+    <div class=container>
+	<div>
+		<img src = "heading.png" style="height:50px;width:250px;margin-left:500px"></img>      
+		</div>
+    <h1>List of Users</h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">age</th>
+            <th scope="col">email</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+       
+          <tr id="mark">
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>22</td>
+            <td>mark@gmail.com</td>
+           
+          </tr>
+        
+          <tr id="jacob">
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>25</td>
+            <td>Jacob@gmail.com</td>
+          
+          </tr>
+          <tr id="larry">
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>30</td>
+            <td>Larry@gmail.com</td>
+            
+          </tr>
+        </tbody>
+      </table>
+      <form action="page3.html">
+        <button class= "btn btn-primary">Find Purchase Intention</button>
+        
+      </form>
+    </div>
+<script>
+    $("#mark").click(function(){
+      location.replace("page4.html")
+    });
+   $("#jacob").click(function(){
+      
+  });
+    $("#larry").click(function(){
+      
+    });  
+</script>
+</body>
+</html>>

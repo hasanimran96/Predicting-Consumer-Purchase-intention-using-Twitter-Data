@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="jquery-3.3.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <title>My Chart.js Chart</title>
+</head>
+<style>
+.chart{
+/* float:right; */
+width:600px !important;
+height:600px !important;
+margin-top: 30px
+}
+ .img  { 
+    
+  
+  width: 1024px;
+  height: 800px;
+  background-color: #eee;
+  overflow: scroll;
+    margin-top: 350px;
+ }
+#form1{
+  height: 500px;
+  width: 500px;
+  margin-top: 30px
+}
+
+#table1{
+  float: right;
+  height: 500px;
+  width: 500px;
+  /* overflow: ; */
+}
+</style>
+<body>
+<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <img src="Picture1.png" style="height:100px;width:100px; margin-bottom: -40px; margin-top: -10px;"></img>
+		</div>
+		<ul class="nav navbar-nav">
+		  <li><a href="page1.html">Home</a></li>
+		  <li><a href="page2.html">Customer's List</a></li>
+		  <li class="active"><a href="page3.html">Potential Customers</a></li>
+		</ul>
+		
+	  </div>
+	</nav>
+  <div class="container">
+      <div>
+      <img src = "heading.png" style="height:50px;width:250px;margin-left:500px"></img>      
+      </div>
+      
+      <div id="table1">
+        <h1>List of Users</h1>
+      <table class="table" >
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">age</th>
+              <th scope="col">email</th>
+              <th scope="col">level</th>
+              <th scope="col">score</th>
+            </tr>
+          </thead>
+          <tbody>
+         
+            <tr id="mark">
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>22</td>
+              <td>mark@gmail.com</td>
+              <td>2</td>
+              <td>85</td>
+            </tr>
+          
+            <tr id="jacob">
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>25</td>
+              <td>Jacob@gmail.com</td>
+              <td>2</td>
+              <td>80</td>
+            </tr>
+            <tr id="larry">
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>the Bird</td>
+              <td>30</td>
+              <td>Larry@gmail.com</td>
+              <td>3</td>
+              <td>70</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <form id="form1">
+        <div class="form-group">
+          <label for="level1">Level 1</label>
+          <input type="text" class="form-control" name="level1" id="l1"  placeholder="90%-100%">
+          <br>
+          <label for="level2">Level 2</label>
+          <input type="text" class="form-control" name="level2" id="l2"  placeholder="80%-90%">
+          <br>
+          <label for="level3">Level 3</label>
+          <input type="text" class="form-control" name="level3" id="l3" placeholder="70%-80%">
+          <br>
+          <button type="button" class="btn btn-primary" id="sub">Customize</button>
+      </form>
+    
+      <div class="chart">
+        <canvas id="myChart"></canvas>
+    </div>
+  
+  <script type=text/javascript>
+  var out1="Level 1 90-100"; var out2="Level 2 80-90"; var out3="Level 3 70-80";
+  var l1="Level 1 "; var l2="Level 2 "; var l3="Level 3 " 
+  $("#sub").click(function(){
+    out1=$("#l1").val();
+    out2=$("#l2").val();
+    out3=$("#l3").val();
+    var res1 =l1.concat(out1);
+    var res2 =l2.concat(out2);
+    var res3 =l3.concat(out3);
+     draw(res1,res2,res3);
+  })
+  function draw(out1,out2,out3) {
+    let myChart = document.getElementById('myChart').getContext('2d');
+    // Global Options
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#777';
+    
+    let massPopChart = new Chart(myChart, {
+      type:'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data:{ 
+      labels:[out1,out2,out3],
+        datasets:[{
+          label:'iPhone word in tweets',
+          data:[
+            100,
+           200,
+            300
+          ],
+          //backgroundColor:'green',
+          backgroundColor:[
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)',
+            'rgba(255, 99, 132, 0.6)'
+          ],
+          borderWidth:1,
+          borderColor:'#777',
+          hoverBorderWidth:3,
+          hoverBorderColor:'#000'
+        }]
+      },
+      options:{
+        title:{
+          display:true,
+          text:' Distribution of Levels of Users',
+          fontSize:25
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#000'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+  }
+
+  
+  </script>
+</body>
+</html>
