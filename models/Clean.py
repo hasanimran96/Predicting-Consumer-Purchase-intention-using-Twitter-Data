@@ -203,3 +203,12 @@ class DataCLean:
                 li_cleanText[count_stemed] = word[:-3]
             count_stemed += 1
         return li_cleanText
+
+    def Clean(self):
+        # path = 'E:/DATA/Sem8/fyp/Training.csv'
+        final_df, df = self.extract('E:/DATA/Sem8/fyp/Training.csv')
+        # corpus = clean.text_concat(final_df)
+        li_clean_text, df_clean = self.clean_data(final_df)
+        # print("ammar")
+        uniqueWords = self.make_unique_li(li_clean_text)
+        return df_clean, uniqueWords
