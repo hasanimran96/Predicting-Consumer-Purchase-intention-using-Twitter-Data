@@ -25,8 +25,8 @@ def generatingTrainSet():
     final_df, uniqueWords = _dcl.Clean()
     _dv = dv.DocumentVector()
     # docVector = _dv.tf_idf(final_df, uniqueWords)
-    docVector = _dv.DocVector(final_df, uniqueWords)
-    # docVector = _dv.binary_docvector(final_df, uniqueWords)
+    # docVector = _dv.DocVector(final_df, uniqueWords)
+    docVector = _dv.binary_docvector(final_df, uniqueWords)
 
     # -------------------------------------------------------------------------
     # using textblob dict approach
