@@ -1,7 +1,7 @@
 import pandas as pd
 import Clean as cl
 from sklearn import svm
-import pathConfig as pc  #path config file imported
+import pathConfig as pc  # path config file imported
 import docVector as dv
 
 # from sklearn.cross_validation import train_test_split
@@ -24,9 +24,18 @@ def generatingTrainSet():
     _dcl = cl.DataCLean()
     final_df, uniqueWords = _dcl.Clean()
     _dv = dv.DocumentVector()
-    #docVector = _dv.tf_idf(final_df, uniqueWords)
-    #docVector = _dv.DocVector(final_df, uniqueWords)
-    docVector = _dv.binary_docvector(final_df, uniqueWords)
+    # docVector = _dv.tf_idf(final_df, uniqueWords)
+    docVector = _dv.DocVector(final_df, uniqueWords)
+    # docVector = _dv.binary_docvector(final_df, uniqueWords)
+
+    # -------------------------------------------------------------------------
+    # using textblob dict approach
+    import NaiveBayesTextBlob as tb
+
+    polarity_docVector = tb.text_blob(docVector, uniqueWords)
+    docVector = polarity_docVector
+    # -------------------------------------------------------------------------
+
     df = docVector.values
     X_train, Y = df[:, :-1], df[:, -1]
     Y_train = convert_to_0_or_1(Y)
@@ -109,8 +118,8 @@ model = clf.fit(X_train, Y_train)
 
 # -------------------------------------------------------------------------
 # Applying Naive Bayes
-Naive = naive_bayes.MultinomialNB()
-Naive.fit(X_train, Y_train)
+# Naive = naive_bayes.MultinomialNB()
+# Naive.fit(X_train, Y_train)
 # -------------------------------------------------------------------------
 
 
@@ -144,10 +153,10 @@ print()
 
 # -------------------------------------------------------------------------
 # statitics for NaiveBayes
-stats = report_results(Naive, X_test, Y_test)
+# stats = report_results(Naive, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for NaiveBayes")
-print(stats)
+# print(stats)
 print("-------------------------------------------------------------------------")
 print()
 # -------------------------------------------------------------------------

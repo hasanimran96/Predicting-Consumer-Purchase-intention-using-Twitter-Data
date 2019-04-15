@@ -4,8 +4,7 @@ import numpy as np
 
 
 class DocumentVector:
-
-    def tf_idf(self, df_cleaned_text ,unique):
+    def tf_idf(self, df_cleaned_text, unique):
         # unique = list(set(corpus.split()))
         # # print(unique)
         # tfIdf_df = pd.DataFrame(columns=unique)
@@ -26,13 +25,13 @@ class DocumentVector:
         return tf_df
 
     def DocVector(self, final_df, uniqueWords):
-        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
+        data = np.zeros([final_df["class"].count(), len(uniqueWords)])
         docVector1 = pd.DataFrame(data, columns=uniqueWords)
-        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
+        docVector = docVector1.assign(PurchaseIntention=list(final_df["class"]))
         # docVector['Purchase Intention'] = final_df['class']
         # print(docVector['PurchaseIntention'])
         doc_count = 0
-        for doc in final_df['text']:
+        for doc in final_df["text"]:
             words = doc.split()
             for word in words:
                 temp = word.lower()
@@ -43,13 +42,13 @@ class DocumentVector:
         return docVector
 
     def binary_docvector(self, final_df, uniqueWords):
-        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
+        data = np.zeros([final_df["class"].count(), len(uniqueWords)])
         docVector1 = pd.DataFrame(data, columns=uniqueWords)
-        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
+        docVector = docVector1.assign(PurchaseIntention=list(final_df["class"]))
         # docVector['Purchase Intention'] = final_df['class']
         # print(docVector['PurchaseIntention'])
         doc_count = 0
-        for doc in final_df['text']:
+        for doc in final_df["text"]:
             words = doc.split()
             for word in words:
                 temp = word.lower()
@@ -59,5 +58,4 @@ class DocumentVector:
             doc_count += 1
         # print(docVector['good'])
         return docVector
-
 
