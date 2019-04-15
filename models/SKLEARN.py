@@ -6,6 +6,7 @@ import docVector as dv
 
 # from sklearn.cross_validation import train_test_split
 from sklearn import model_selection, naive_bayes
+from sklearn.neural_network import MLPClassifier
 import numpy as np
 
 from sklearn.metrics import make_scorer, accuracy_score, f1_score
@@ -24,9 +25,9 @@ def generatingTrainSet():
     _dcl = cl.DataCLean()
     final_df, uniqueWords = _dcl.Clean()
     _dv = dv.DocumentVector()
-    # docVector = _dv.tf_idf(final_df, uniqueWords)
+    docVector = _dv.tf_idf(final_df, uniqueWords)
     # docVector = _dv.DocVector(final_df, uniqueWords)
-    docVector = _dv.binary_docvector(final_df, uniqueWords)
+    # docVector = _dv.binary_docvector(final_df, uniqueWords)
 
     # -------------------------------------------------------------------------
     # using textblob dict approach
@@ -165,7 +166,7 @@ print()
 # statitics for LogisticRegression
 stats = report_results(logisticReg, X_test, Y_test)
 print("-------------------------------------------------------------------------")
-print("statitics for LogisticRegression")
+print("statitics for Logistic Regression")
 print(stats)
 print("-------------------------------------------------------------------------")
 print()
@@ -176,6 +177,20 @@ print()
 stats = report_results(dtc, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for decision tree")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# statistics for neurql network
+clf = MLPClassifier(
+    solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1
+)
+clf.fit(X_train, Y_train)
+stats = report_results(clf, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for Neural Network")
 print(stats)
 print("-------------------------------------------------------------------------")
 print()
