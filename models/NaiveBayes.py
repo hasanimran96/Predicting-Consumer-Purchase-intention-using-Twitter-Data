@@ -9,49 +9,6 @@ import math
 
 class NaiveBayesModel:
 
-    def undefined_extract(self, df):
-        undefined = df['class'] == "undefined"
-        # output dataframe without undeined
-        df_undefine = df[undefined]
-        print(df_undefine)
-        return df_undefine
-
-
-    def DocVector(self, final_df, uniqueWords):
-        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
-        docVector1 = pd.DataFrame(data, columns=uniqueWords)
-        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
-        # docVector['Purchase Intention'] = final_df['class']
-        # print(docVector['PurchaseIntention'])
-        doc_count = 0
-        for doc in final_df['text']:
-            words = doc.split()
-            for word in words:
-                temp = word.lower()
-                if temp in docVector.columns:
-                    docVector.at[doc_count, temp] += 1
-            doc_count += 1
-
-        return docVector
-
-    def binary_docvector(self, final_df, uniqueWords):
-        data = np.zeros([final_df['class'].count(), len(uniqueWords)])
-        docVector1 = pd.DataFrame(data, columns=uniqueWords)
-        docVector = docVector1.assign(PurchaseIntention=list(final_df['class']))
-        # docVector['Purchase Intention'] = final_df['class']
-        # print(docVector['PurchaseIntention'])
-        doc_count = 0
-        for doc in final_df['text']:
-            words = doc.split()
-            for word in words:
-                temp = word.lower()
-                if temp in docVector.columns:
-                    if docVector.iloc[doc_count][temp] < 1:
-                        docVector.at[doc_count, temp] += 1
-            doc_count += 1
-        # print(docVector['good'])
-        return docVector
-
     def WordGivenNoPI(self, tempNegDocVector, uniqueWords):
         data = np.zeros([1, len(uniqueWords)])
         wordGivenNoPI = pd.DataFrame(data, columns=uniqueWords)
@@ -93,21 +50,13 @@ class NaiveBayesModel:
         return wordGivenPI, df_wordGivenNoPI, Prob_PI, Prob_NoPI, numWordsInPI, numWordsInNoPI
 
 
-    def Predict_kfold(self, Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,df_test, clean):
-        eng_df = clean.check_english(df_test)
-        # print(eng_df)
-        new_df = clean.space(eng_df)
-        # print("Hello clean data")
-        # print(new_df["text"])
-        df_remove_stopWords = clean.remove_stopwords(new_df)
-        new_corpus_df = clean.handle_negation(df_remove_stopWords)
-        remove_punc_df = clean.remove_punc(new_corpus_df)
-
+    def predict(self,Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,
+                df_test, clean):
         predict_df = pd.DataFrame()
         weighPI = Prob_PI
         weighNoPI = Prob_NoPI
         count_test = 0
-        for sentence in remove_punc_df['text']:
+        for sentence in df_test['text']:
             # print(count_test)
             for word in sentence.lower().split():
                 if word in uniqueWords:
@@ -127,67 +76,7 @@ class NaiveBayesModel:
             count_test += 1
             weighPI = Prob_PI
             weighNoPI = Prob_NoPI
-        return predict_df, remove_punc_df
+        return predict_df, df_test
 
-    def Predict(self, Prob_PI, Prob_NoPI, uniqueWords, df_WordGivenPI, df_WordGivenNoPi, numWordsInPI, numWordsInNoPI,clean):
-        test_path = "E:/DATA/Sem8/fyp/test data/Testing.csv"
-        test_data, test_df = clean.extract(test_path)
 
-        eng_df = clean.check_english(test_data)
-        # print(eng_df)
-        df_stem = clean.Stemming(eng_df)
-        new_df = clean.space(df_stem)
-        # print("Hello clean data")
-        # print(new_df["text"])
-
-        df_remove_stopWords = clean.remove_stopwords(new_df)
-
-        new_corpus_df = clean.handle_negation(df_remove_stopWords)
-        remove_punc_df = clean.remove_punc(new_corpus_df)
-
-        predict_df = pd.DataFrame()
-        weighPI = Prob_PI
-        weighNoPI = Prob_NoPI
-        count_test = 0
-        for sentence in remove_punc_df['text']:
-            # print(count_test)
-            for word in sentence.lower().split():
-                if word in uniqueWords:
-                    weighPI = weighPI * df_WordGivenPI.at[0, word]
-                    weighNoPI = weighNoPI * df_WordGivenNoPi.at[0, word]
-                else:
-                    weighPI = weighPI * (1 / (numWordsInPI + len(uniqueWords)))
-                    weighNoPI = weighNoPI * (1 / (numWordsInNoPI + len(uniqueWords)))
-            predict_df.at[count_test, 'WeightPI'] = weighPI
-            if weighPI > weighNoPI:
-                predict_df.at[count_test, 'PredictedClass'] = 'yes'
-                # print(test_data.at[count_test,'text'],test_data.at[count_test,'PredictedClass'])
-            else:
-                predict_df.at[count_test, 'PredictedClass'] = 'no'
-                # print(test_data.at[count_test,'text'],test_data.at[count_test,'PredictedClass'])
-
-            count_test += 1
-            weighPI = Prob_PI
-            weighNoPI = Prob_NoPI
-        return predict_df, remove_punc_df
-
-    def tf_idf(self, unique, df_cleaned_text):
-        # unique = list(set(corpus.split()))
-        # # print(unique)
-        # tfIdf_df = pd.DataFrame(columns=unique)
-        tf_df = self.DocVector(df_cleaned_text,unique)
-        # idf_df = pd.DataFrame()
-        total_docs = len(tf_df.index)
-        for column in unique:
-            num_doc_word = 0
-            for no_doc in range(total_docs):
-                if tf_df.at[no_doc, column] > 0:
-                    num_doc_word += 1
-            # print(num_doc_word)
-            idf = math.log(total_docs / (num_doc_word+1))
-            # idf_df.at[0,column] = idf
-            tf_df[column] = tf_df[column].multiply(idf)
-            idf = 0
-        # print(tf_df['buy'])
-        return tf_df
 

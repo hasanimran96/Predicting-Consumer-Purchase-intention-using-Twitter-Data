@@ -15,6 +15,7 @@ pathStopwords = pc.PATH_CONFIG['pathStopWords']
 pathData = pc.PATH_CONFIG['pathData']
 #-------------------------------
 
+
 class DataCLean:
 
     def extract(self, path):
@@ -125,7 +126,7 @@ class DataCLean:
                     count = 0
                     lower_word = word.lower()
                     if lower_word == "didn't" or lower_word == "not" or lower_word == "no" or lower_word == "never"\
-                            or lower_word == "don't":
+                            or lower_word == "don't" or lower_word == "hate":
                         temp = count + 1
                         temp_text = temp_text + word + " "
                         for i in range(temp,len(li_text)):
@@ -185,14 +186,15 @@ class DataCLean:
         eng_df = self.check_english(final_df)
         # print(eng_df)
         df_stem = self.Stemming(eng_df)
-        new_df = self.space(df_stem)
-        df_remove_stopWords = self.remove_stopwords(new_df)
-        new_corpus_df = self.handle_negation(df_remove_stopWords)
+        new_df = self.space(eng_df)
+        new_corpus_df = self.handle_negation(new_df)
         remove_punc_df = self.remove_punc(new_corpus_df)
-        new_corpus = self.text_concat(remove_punc_df)
+        df_remove_stopWords = self.remove_stopwords(remove_punc_df)
+
+        new_corpus = self.text_concat(df_remove_stopWords)
         li_new_corpus = new_corpus.split()
-        print(remove_punc_df)
-        return li_new_corpus, remove_punc_df
+        # print(remove_punc_df)
+        return li_new_corpus, df_remove_stopWords
 
     def make_unique_li(self, li_cleanText):
         unique_words_set = set(li_cleanText)
