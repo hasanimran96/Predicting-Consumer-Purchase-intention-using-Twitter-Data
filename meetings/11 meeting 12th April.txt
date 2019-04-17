@@ -1,0 +1,8 @@
+minutes of the meeting:
+    1. check with removing stopwords
+    2. start writing research paper
+    3. continue work on front-end
+    4. tensor flow video by JEFF HEATON
+    5. check for a library for text processing
+    6. check order for applying text processing
+
