@@ -25,16 +25,16 @@ def generatingTrainSet():
     _dcl = cl.DataCLean()
     final_df, uniqueWords = _dcl.Clean()
     _dv = dv.DocumentVector()
-    #docVector = _dv.tf_idf(final_df, uniqueWords)
+    # docVector = _dv.tf_idf(final_df, uniqueWords)
     docVector = _dv.DocVector(final_df, uniqueWords)
     # docVector = _dv.binary_docvector(final_df, uniqueWords)
 
     # -------------------------------------------------------------------------
     # using textblob dict approach
-    #import NaiveBayesTextBlob as tb
+    # import NaiveBayesTextBlob as tb
 
-    #polarity_docVector = tb.text_blob(docVector, uniqueWords)
-    #docVector = polarity_docVector
+    # polarity_docVector = tb.text_blob(docVector, uniqueWords)
+    # docVector = polarity_docVector
     # -------------------------------------------------------------------------
 
     df = docVector.values
