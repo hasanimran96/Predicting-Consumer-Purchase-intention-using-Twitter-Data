@@ -121,3 +121,178 @@ print(final_data_frame["text"].head())
 print()
 # ---------------------------------------------------------------------
 
+# ---------------------------------------------------------------------
+# BUILDING THE CORPUS
+corpus = []
+for text in final_data_frame["text"]:
+    corpus.append(text)
+print("corpus")
+print(corpus)
+print()
+# ---------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# CHANGE CLASS VALUES FROM YES/NO TO 0/1
+final_data_frame.rename(columns={"class": "class_label"}, inplace=True)
+Class_Label = {"yes": 1, "no": 0}
+final_data_frame.class_label = [
+    Class_Label[item] for item in final_data_frame.class_label
+]
+final_data_frame.rename(columns={"class_label": "class"}, inplace=True)
+print("rename values of class column")
+print(final_data_frame.head())
+print()
+# -------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# TF
+# Transforms text into a sparse matrix of n-gram counts.
+from sklearn.feature_extraction.text import CountVectorizer
+
+count_vectorizer = CountVectorizer()
+count_vectorized_data = count_vectorizer.fit_transform(corpus)
+# --------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# IDF
+# Performs the TF-IDF transformation from a provided matrix of counts.
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_vectorized_data = tfidf_vectorizer.fit_transform(corpus)
+# --------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# chose document vector
+# vectorized_data = count_vectorized_data
+vectorized_data = tfidf_vectorized_data
+# --------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# SPLITING THE DATA
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, Y_train, Y_test = train_test_split(
+    vectorized_data, final_data_frame["class"], test_size=0.3, random_state=0
+)
+# --------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# Applying SVM
+from sklearn import svm
+
+SVM = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
+SVM.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# Applying Naive Bayes
+from sklearn import naive_bayes
+
+Naive = naive_bayes.MultinomialNB()
+Naive.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# Applying Logistic Regression
+from sklearn import linear_model
+
+logisticReg = linear_model.LogisticRegression(C=1.0)
+logisticReg.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# Applying Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+
+dtc = DecisionTreeClassifier(min_samples_split=7, random_state=252)
+dtc.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# Applying Neural Network
+from sklearn.neural_network import MLPClassifier
+
+neural_network = MLPClassifier(
+    solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1
+)
+neural_network.fit(X_train, Y_train)
+# -------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------
+# statitics
+from sklearn.metrics import make_scorer, accuracy_score, f1_score
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import (
+    confusion_matrix,
+    roc_auc_score,
+    recall_score,
+    precision_score,
+)
+
+
+def report_results(model, X, y):
+    pred_proba = model.predict_proba(X)[:, 1]
+    pred = model.predict(X)
+
+    auc = roc_auc_score(y, pred_proba)
+    acc = accuracy_score(y, pred)
+    f1 = f1_score(y, pred)
+    prec = precision_score(y, pred)
+    rec = recall_score(y, pred)
+    tn, fp, fn, tp = confusion_matrix(y, pred).ravel()
+    TrueNeg = tn / (tn + fp)
+    result = {
+        "auc": auc,
+        "f1": f1,
+        "acc": acc,
+        "precision": prec,
+        "recall": rec,
+        "TN": tn,
+        "FP": fp,
+        "FN": fn,
+        "TP": tp,
+        "True Negative rate": TrueNeg,
+    }
+    return result
+
+
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# statitics for SVM
+stats = report_results(SVM, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for SVM")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# statitics for NaiveBayes
+stats = report_results(Naive, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for NaiveBayes")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# statitics for LogisticRegression
+stats = report_results(logisticReg, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for Logistic Regression")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# statitics for DECISION TREE
+stats = report_results(dtc, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for decision tree")
+print(stats)
+print("-------------------------------------------------------------------------")
+print()
+# statistics for neural network
+stats = report_results(neural_network, X_test, Y_test)
+print("-------------------------------------------------------------------------")
+print("statitics for Neural Network")
+print(stats)
+print("-------------------------------------------------------------------------")
+print("")
+# --------------------------------------------------------------------------
