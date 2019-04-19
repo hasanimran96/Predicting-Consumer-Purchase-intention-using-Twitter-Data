@@ -25,7 +25,15 @@
 		<ul class="nav navbar-nav">
 		  <li class="active"><a href="{% url 'home' %}">Home</a></li>
 		  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-      <li><a href="{% url 'upload' %}">Machine Learning</a></li>
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Machine Learning
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'annotate' %}">Upload Annotated Data</a>
+            <a class="dropdown-item" href="{% url 'test' %}">Upload Test Data</a>
+          </div>
+        </li>
       <li><a href="{% url 'analysis' %}">Analysis</a></li>
       <li><a href="{% url 'result' %}">Result</a></li>
 		</ul>
