@@ -296,3 +296,77 @@ print(stats)
 print("-------------------------------------------------------------------------")
 print("")
 # --------------------------------------------------------------------------
+
+
+def output_to_results(pathData):
+    final_data_frame, data_frame_undefined = extract(pathData)
+    final_data_frame["text"] = final_data_frame["text"].apply(
+        lambda x: " ".join(x.lower() for x in x.split())
+    )
+    final_data_frame["text"] = final_data_frame["text"].str.replace("[^\w\s]", "")
+    stop = stopwords.words("english")
+    final_data_frame["text"] = final_data_frame["text"].apply(
+        lambda x: " ".join(x for x in x.split() if x not in stop)
+    )
+    freq = pd.Series(" ".join(final_data_frame["text"]).split()).value_counts()[:10]
+    freq = list(freq.index)
+    final_data_frame["text"] = final_data_frame["text"].apply(
+        lambda x: " ".join(x for x in x.split() if x not in freq)
+    )
+    rare = pd.Series(" ".join(final_data_frame["text"]).split()).value_counts()[-10:]
+    rare = list(rare.index)
+    final_data_frame["text"] = final_data_frame["text"].apply(
+        lambda x: " ".join(x for x in x.split() if x not in rare)
+    )
+    final_data_frame["text"][:5].apply(lambda x: str(TextBlob(x).correct()))
+    st = PorterStemmer()
+    final_data_frame["text"][:5].apply(
+        lambda x: " ".join([st.stem(word) for word in x.split()])
+    )
+    final_data_frame["text"] = final_data_frame["text"].apply(
+        lambda x: " ".join([Word(word).lemmatize() for word in x.split()])
+    )
+    corpus = []
+    for text in final_data_frame["text"]:
+        corpus.append(text)
+    final_data_frame.rename(columns={"class": "class_label"}, inplace=True)
+    Class_Label = {"yes": 1, "no": 0}
+    final_data_frame.class_label = [
+        Class_Label[item] for item in final_data_frame.class_label
+    ]
+    final_data_frame.rename(columns={"class_label": "class"}, inplace=True)
+    count_vectorizer = CountVectorizer()
+    count_vectorized_data = count_vectorizer.fit_transform(corpus)
+    tfidf_vectorizer = TfidfVectorizer()
+    tfidf_vectorized_data = tfidf_vectorizer.fit_transform(corpus)
+    vectorized_data = tfidf_vectorized_data
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        vectorized_data, final_data_frame["class"], test_size=0.3, random_state=0
+    )
+    SVM = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
+    SVM.fit(X_train, Y_train)
+    Naive = naive_bayes.MultinomialNB()
+    Naive.fit(X_train, Y_train)
+    logisticReg = linear_model.LogisticRegression(C=1.0)
+    logisticReg.fit(X_train, Y_train)
+    dtc = DecisionTreeClassifier(min_samples_split=7, random_state=252)
+    dtc.fit(X_train, Y_train)
+    neural_network = MLPClassifier(
+        solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1
+    )
+    neural_network.fit(X_train, Y_train)
+    stats_SVM = report_results(SVM, X_test, Y_test)
+    stats_Naive = report_results(Naive, X_test, Y_test)
+    stats_logistic = report_results(logisticReg, X_test, Y_test)
+    stats_dtc = report_results(dtc, X_test, Y_test)
+    stats_neural = report_results(neural_network, X_test, Y_test)
+    stats = []
+    stats.append(stats_SVM)
+    stats.append(stats_Naive)
+    stats.append(stats_logistic)
+    stats.append(stats_dtc)
+    stats.append(stats_neural)
+    return stats
+
+
+print(output_to_results("data/AnnotatedData3.csv"))
