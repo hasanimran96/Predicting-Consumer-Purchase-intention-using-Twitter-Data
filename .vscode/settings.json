@@ -1,6 +1,6 @@
 {
-    "python.pythonPath": "PurchaseIntention\\Scripts\\python.exe",
+    "python.pythonPath": "/usr/bin/python3",
     "python.linting.pylintEnabled": true,
-    "python.formatting.provider": "black",
+    "python.formatting.provider": "autopep8",
     "python.linting.enabled": true
 }

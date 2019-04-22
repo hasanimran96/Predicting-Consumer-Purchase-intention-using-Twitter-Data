@@ -74,20 +74,23 @@ def output_to_results(pathData, doc_vector, model):
         lambda x: " ".join(x.lower() for x in x.split())
     )
     # 2. REMOVE PUNC
-    final_data_frame["text"] = final_data_frame["text"].str.replace("[^\w\s]", "")
+    final_data_frame["text"] = final_data_frame["text"].str.replace(
+        "[^\w\s]", "")
     # 3. STOPWORDS REMOVAL
     stop = stopwords.words("english")
     final_data_frame["text"] = final_data_frame["text"].apply(
         lambda x: " ".join(x for x in x.split() if x not in stop)
     )
     # 4. COMMON WORD REMOVAL
-    freq = pd.Series(" ".join(final_data_frame["text"]).split()).value_counts()[:10]
+    freq = pd.Series(
+        " ".join(final_data_frame["text"]).split()).value_counts()[:10]
     freq = list(freq.index)
     final_data_frame["text"] = final_data_frame["text"].apply(
         lambda x: " ".join(x for x in x.split() if x not in freq)
     )
     # 5. RARE WORDS REMOVAL
-    rare = pd.Series(" ".join(final_data_frame["text"]).split()).value_counts()[-10:]
+    rare = pd.Series(
+        " ".join(final_data_frame["text"]).split()).value_counts()[-10:]
     rare = list(rare.index)
     final_data_frame["text"] = final_data_frame["text"].apply(
         lambda x: " ".join(x for x in x.split() if x not in rare)
@@ -139,7 +142,8 @@ def output_to_results(pathData, doc_vector, model):
     # Select model to train and display stats
     # -----------------------------------------------------------------------
     if model == "SVM":
-        SVM = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
+        SVM = svm.SVC(probability=True, C=1.0,
+                      kernel="linear", degree=3, gamma="auto")
         SVM.fit(X_train, Y_train)
         stats = report_results(SVM, X_test, Y_test)
     elif model == "naive":
