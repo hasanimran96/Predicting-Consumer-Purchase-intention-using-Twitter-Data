@@ -1,0 +1,10 @@
+enchant/lib
+enchant/share
+enchant/libenchant-1.dll
+enchant/iconv.dll
+enchant/intl.dll
+enchant/libenchant-1.dll
+enchant/libglib-2.0-0.dll
+enchant/libgmodule-2.0-0.dll
+enchant/lib/enchant/libenchant_ispell.dll
+enchant/lib/enchant/libenchant_myspell.dll

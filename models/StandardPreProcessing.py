@@ -1,8 +1,8 @@
-import pathConfig as pc  # path config file imported
+from pathConfig import PATH_CONFIG  # path config file imported
 import pandas as pd
 
-pathData = "data/AnnotatedData3.csv"  # ubunutu/linux
-# pathData = pc.PATH_CONFIG['pathData'] #windows
+# pathData = "data/AnnotatedData3.csv"  # ubunutu/linux
+pathData = PATH_CONFIG['pathData'] #windows
 
 
 def extract(path):
@@ -369,4 +369,4 @@ def output_to_results(pathData):
     return stats
 
 
-print(output_to_results("data/AnnotatedData3.csv"))
+output_to_results("data/AnnotatedData3.csv")

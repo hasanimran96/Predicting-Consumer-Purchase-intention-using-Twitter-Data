@@ -1,0 +1,8 @@
+{% extends 'navbar.html' %}
+{% block title  %}Results{% endblock %}
+{% block content %}
+<br>
+{% for list in out1 %}
+    {{ list }}    
+{% endfor %}    
+{% endblock %}
