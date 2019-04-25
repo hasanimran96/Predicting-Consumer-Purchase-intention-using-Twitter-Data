@@ -1,0 +1,8 @@
+1. handling negation
+2. without handling negation
+3. with lemitization
+4. without lemitization
+pick the better one for kfold
+3. with kfold, k=5
+4. with fixed division 0.3 (apply to all)
+5. total tables = 4 + 1(with kfold)

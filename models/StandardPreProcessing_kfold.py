@@ -21,6 +21,8 @@ from nltk.corpus import stopwords
 from pathConfig import PATH_CONFIG  # path config file imported
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import KFold
+
 
 pathData = "data/AnnotatedData3.csv"  # ubunutu/linux
 # pathData = PATH_CONFIG['pathData'] #windows
@@ -116,7 +118,7 @@ def report_results(model, X, y):
         "TP": tp,
         "True Negative rate": TrueNeg,
     }
-    return result
+    return acc, TrueNeg, prec, rec
 
 
 final_data_frame, data_frame_undefined = extract(pathData)
@@ -279,86 +281,201 @@ tfidf_vectorized_data = tfidf_vectorizer.fit_transform(corpus)
 vectorized_data = tfidf_vectorized_data
 # --------------------------------------------------------------------------
 
-# --------------------------------------------------------------------------
-# SPLITING THE DATA
+# # --------------------------------------------------------------------------
+# # SPLITING THE DATA
 
-X_train, X_test, Y_train, Y_test = train_test_split(
-    vectorized_data, final_data_frame["class"], test_size=0.3, random_state=0
-)
-# --------------------------------------------------------------------------
+# X_train, X_test, Y_train, Y_test = train_test_split(
+#     vectorized_data, final_data_frame["class"], test_size=0.3, random_state=0
+# )
+# # --------------------------------------------------------------------------
 
-# -------------------------------------------------------------------------
-# Applying SVM
-
-SVM = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
-SVM.fit(X_train, Y_train)
-# -------------------------------------------------------------------------
-
-# -------------------------------------------------------------------------
-# Applying Naive Bayes
-
-Naive = naive_bayes.MultinomialNB()
-Naive.fit(X_train, Y_train)
-# -------------------------------------------------------------------------
-
-# -------------------------------------------------------------------------
-# Applying Logistic Regression
-
-logisticReg = linear_model.LogisticRegression(C=1.0)
-logisticReg.fit(X_train, Y_train)
-# -------------------------------------------------------------------------
-
-# -------------------------------------------------------------------------
-# Applying Decision Tree
-
-dtc = DecisionTreeClassifier(min_samples_split=7, random_state=252)
-dtc.fit(X_train, Y_train)
-# -------------------------------------------------------------------------
-
-# -------------------------------------------------------------------------
-# Applying Neural Network
-
-neural_network = MLPClassifier(
-    solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(15, 15, 5), random_state=1
-)
-neural_network.fit(X_train, Y_train)
-# -------------------------------------------------------------------------
+acc_SVM = 0.0
+TrueNeg_SVM = 0.0
+prec_SVM = 0.0
+recall_SVM = 0.0
+acc_Naive = 0.0
+TrueNeg_Naive = 0.0
+prec_Naive = 0.0
+recall_Naive = 0.0
+acc_log = 0.0
+TrueNeg_log = 0.0
+prec_log = 0.0
+recall_log = 0.0
+acc_dtc = 0.0
+TrueNeg_dtc = 0.0
+prec_dtc = 0.0
+recall_dtc = 0.0
+acc_nn = 0.0
+TrueNeg_nn = 0.0
+prec_nn = 0.0
+recall_nn = 0.0
 
 # --------------------------------------------------------------------------
-# statitics
+# APPLYING KFOLD CROSS VALIDATION
+kf = KFold(n_splits=5, shuffle=True, random_state=None)
+
+for train_index, test_index in kf.split(final_data_frame):
+    #print("Train:", train_index, "Validation:", test_index)
+    X_train, X_test = vectorized_data[train_index], vectorized_data[test_index]
+    Y_train, Y_test = final_data_frame["class"][train_index], final_data_frame["class"][test_index]
+# --------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # Applying SVM
+
+    SVM = svm.SVC(probability=True, C=1.0,
+                  kernel="linear", degree=3, gamma="auto")
+    SVM.fit(X_train, Y_train)
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # Applying Naive Bayes
+
+    Naive = naive_bayes.MultinomialNB()
+    Naive.fit(X_train, Y_train)
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # Applying Logistic Regression
+
+    logisticReg = linear_model.LogisticRegression(C=1.0)
+    logisticReg.fit(X_train, Y_train)
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # Applying Decision Tree
+
+    dtc = DecisionTreeClassifier(min_samples_split=7, random_state=252)
+    dtc.fit(X_train, Y_train)
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # Applying Neural Network
+
+    neural_network = MLPClassifier(
+        solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(15, 15, 5), random_state=1
+    )
+    neural_network.fit(X_train, Y_train)
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # AVERAGING THE ACCURACY OF THE MODELS
+    temp_acc_SVM, temp_TrueNeg_SVM, temp_prec_SVM, temp_recall_SVM = report_results(
+        SVM, X_test, Y_test)
+    temp_acc_Naive, temp_TrueNeg_Naive, temp_prec_Naive, temp_recall_Naive = report_results(
+        Naive, X_test, Y_test)
+    temp_acc_log, temp_TrueNeg_log, temp_prec_log, temp_recall_log = report_results(
+        logisticReg, X_test, Y_test)
+    temp_acc_dtc, temp_TrueNeg_dtc, temp_prec_dtc, temp_recall_dtc = report_results(
+        dtc, X_test, Y_test)
+    temp_acc_nn, temp_TrueNeg_nn, temp_prec_nn, temp_recall_nn = report_results(
+        neural_network, X_test, Y_test)
+
+    acc_SVM = acc_SVM + temp_acc_SVM
+    TrueNeg_SVM = TrueNeg_SVM + temp_TrueNeg_SVM
+    prec_SVM = prec_SVM + temp_prec_SVM
+    recall_SVM = recall_SVM + temp_recall_SVM
+    acc_Naive = acc_Naive + temp_acc_Naive
+    TrueNeg_Naive = TrueNeg_Naive + temp_TrueNeg_Naive
+    prec_Naive = prec_Naive + temp_prec_Naive
+    recall_Naive = recall_Naive + temp_recall_Naive
+    acc_log = acc_log + temp_acc_log
+    TrueNeg_log = TrueNeg_log + temp_TrueNeg_log
+    prec_log = prec_log + temp_prec_log
+    recall_log = recall_log + temp_recall_log
+    acc_dtc = acc_dtc + temp_acc_dtc
+    TrueNeg_dtc = TrueNeg_dtc + temp_TrueNeg_dtc
+    prec_dtc = prec_dtc + temp_prec_dtc
+    recall_dtc = recall_dtc + temp_recall_dtc
+    acc_nn = acc_nn + temp_acc_nn
+    TrueNeg_nn = TrueNeg_nn + temp_TrueNeg_nn
+    prec_nn = prec_nn + temp_prec_nn
+    recall_nn = recall_nn + temp_recall_nn
+
+    # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+
+
+acc_SVM = acc_SVM / 5
+TrueNeg_SVM = TrueNeg_SVM / 5
+prec_SVM = prec_SVM / 5
+recall_SVM = recall_SVM / 5
+acc_Naive = acc_Naive / 5
+TrueNeg_Naive = TrueNeg_Naive / 5
+prec_Naive = prec_Naive / 5
+recall_Naive = recall_Naive / 5
+acc_log = acc_log / 5
+TrueNeg_log = TrueNeg_log / 5
+prec_log = prec_log / 5
+recall_log = recall_log / 5
+acc_dtc = acc_dtc / 5
+TrueNeg_dtc = TrueNeg_dtc / 5
+prec_dtc = prec_dtc / 5
+recall_dtc = recall_dtc / 5
+acc_nn = acc_nn / 5
+TrueNeg_nn = TrueNeg_nn / 5
+prec_nn = prec_nn / 5
+recall_nn = recall_nn / 5
+
 # -------------------------------------------------------------------------
 # statitics for SVM
-stats = report_results(SVM, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for SVM")
+stats = {
+    "acc": acc_SVM,
+    "True Negative rate": TrueNeg_SVM,
+    "precision": prec_SVM,
+    "recall": recall_SVM,
+}
 print(stats)
 print("-------------------------------------------------------------------------")
 print()
 # statitics for NaiveBayes
-stats = report_results(Naive, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for NaiveBayes")
+stats = {
+    "acc": acc_Naive,
+    "True Negative rate": TrueNeg_Naive,
+    "precision": prec_Naive,
+    "recall": recall_Naive,
+}
 print(stats)
 print("-------------------------------------------------------------------------")
 print()
 # statitics for LogisticRegression
-stats = report_results(logisticReg, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for Logistic Regression")
+stats = {
+    "acc": acc_log,
+    "True Negative rate": TrueNeg_log,
+    "precision": prec_log,
+    "recall": recall_log,
+}
 print(stats)
 print("-------------------------------------------------------------------------")
 print()
 # statitics for DECISION TREE
-stats = report_results(dtc, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for decision tree")
+stats = {
+    "acc": acc_dtc,
+    "True Negative rate": TrueNeg_dtc,
+    "precision": prec_dtc,
+    "recall": recall_dtc,
+}
 print(stats)
 print("-------------------------------------------------------------------------")
 print()
 # statistics for neural network
-stats = report_results(neural_network, X_test, Y_test)
 print("-------------------------------------------------------------------------")
 print("statitics for Neural Network")
+stats = {
+    "acc": acc_nn,
+    "True Negative rate": TrueNeg_nn,
+    "precision": prec_nn,
+    "recall": recall_nn,
+}
 print(stats)
 print("-------------------------------------------------------------------------")
 print("")
