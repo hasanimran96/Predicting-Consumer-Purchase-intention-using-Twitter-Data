@@ -1,6 +1,6 @@
 Annotation task
 
 Group member	Number of tweets annotated
-Saad		400 + 300
-Ammar		100 + 400 + 300
-Hasan		100 + 400 + 300
+Saad		400 + 300 + 300
+Ammar		100 + 400 + 300 + 300
+Hasan		100 + 400 + 300 + 300
