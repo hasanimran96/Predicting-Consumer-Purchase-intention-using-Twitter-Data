@@ -7,6 +7,8 @@
 <form action="{% url 'annotate' %}" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
     <h2>Upload Annotated Data</h2>
     <br>
+    <h4>Accepts csv file with columns class and text.</h4>
+    <br>
     {% csrf_token %}
     <div class="form-group">
         <label for="name" class="col-md-3 col-sm-3 col-xs-12 control-label">File: </label>
@@ -26,17 +28,34 @@
     </div>
 {% elif error == 1 %}
     <div class="alert alert-danger  alert-dismissible" role="alert"style="width: 450px;">
-       Expected csv file!
+       Expected csv file with columns class and text only!
     </div>
 {% endif %}   
 <br>
 <form action="{% url 'result' %}" method="POST" >
         {% csrf_token %}
-        <select class="form-control">
+        <label>Select Machine model for training and testing </label>
+        <select class="form-control" name="model">
           <option>Logistic Regression</option>
           <option>SVM</option>
           <option>Naive Bayes</option>
           <option>Neural Network</option>
+          <option>Decision Tree</option>
+        </select>
+        <br>
+        <label>Select csv for training and testing </label>
+        <select class="form-control" name="file1">
+            {% for file in files %}
+                {%  for x in file %}
+                    <option> {{x}} </option>
+                {% endfor %}    
+            {% endfor %}
+        </select>
+        <br>
+        <label>Select Document Vector</label>
+        <select class="form-control" name="doc">
+            <option>TF</option>
+            <option>TF-IDF</option>
         </select>
         <br>
         <button type="submit" class="btn btn-primary btn-lg">RUN</button>
