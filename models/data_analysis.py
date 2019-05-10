@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 
-path = "data/Annotated4.csv"
 
 
 def extract(path):
@@ -40,10 +39,5 @@ def output_to_analysis(path):
     return class_count, frequent_words, negative_tweets_str, positive_tweets_str
 
 
-class_count, frequent_words, negative_tweets_str, positive_tweets_str = output_to_analysis(
-    path)
 
-print(class_count)
-print(frequent_words)
-print(negative_tweets_str)
-print(positive_tweets_str)
+

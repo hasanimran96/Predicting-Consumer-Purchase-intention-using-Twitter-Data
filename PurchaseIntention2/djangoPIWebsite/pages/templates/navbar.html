@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
   
   <!-- <script src = "Chart.js"></script> -->
   <style>
@@ -25,14 +26,14 @@
 		</div>
 		<ul class="nav navbar-nav">
 		  <li class="active"><a href="{% url 'home' %}">Home</a></li>
-		  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+		  <!-- <li><a href="{% url 'dashboard' %}">Dashboard</a></li> -->
       <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Machine Learning
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'annotate' %}">Upload Annotated Data</a>
-            <a class="dropdown-item" href="{% url 'test' %}">Upload Test Data</a>
+            <a class="dropdown-item " id="annotated" href="{% url 'annotate' %}">Upload Annotated Data</a>
+            <a class="dropdown-item "  id="test" href="{% url 'test' %}">Upload Test Data</a>
           </div>
         </li>
       <li><a href="{% url 'analysis' %}">Analysis</a></li>
@@ -41,14 +42,19 @@
 		
 	  </div>
     </nav>
+
+    <br>
+   
+
+   
+
+
+
     <div class="container">
         <img src = "{% static 'images/heading.png' %}" style="height:50px;width:250px;margin-left:500px">
         {% block content  %}
         {% endblock %}
     </div>
-    <script type="text/javascript">
-      $(document)
-    </script>
     
     <!-- <footer>
         <center><small>Copyright &copy; PurchaseIntention.pk - All Rights Reserved</small></center>

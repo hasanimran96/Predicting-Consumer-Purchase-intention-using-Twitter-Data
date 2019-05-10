@@ -1,0 +1,121 @@
+{% extends 'navbar.html' %}
+{% block title  %}Test Results{% endblock %}
+{% block content %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<!-- <script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script> -->
+<br><br>
+<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+<hr>
+<br>
+<b><h2>Potential Customers</h2></b>
+<div class="scrollit">
+<table class="table" id="potential">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">{{potential.columns.0}}</th>
+        <th scope="col">{{potential.columns.1}}</th>
+        <th scope="col">{{potential.columns.2}}</th>
+        <th scope="col">{{potential.columns.3}}</th>
+        <th scope="col">{{potential.columns.4}}</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+        {%  for index, row in potential.iterrows %}
+                <tr>
+                    <th scope="row">{{index}}</th>
+                    <td>{{row.0}}</td>
+                    <td>{{row.1}}</td>
+                    <td>{{row.2}}</td>
+                    <td>{{row.3}}</td>
+                    <td>Level {{row.4}}</td>
+                </tr>
+        {% endfor %}    
+
+    </tbody>
+</table>
+</div>
+<hr>
+<br>
+<b><h2>Test Data Prediction Results</h2></b>
+<div class="scrollit">
+<table class="table" id="predict">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">{{out1.columns.0}}</th>
+            <th scope="col">{{out1.columns.1}}</th>
+            <th scope="col">{{out1.columns.2}}</th>
+            <th scope="col">{{out1.columns.3}}</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+            {%  for index, row in out1.iterrows %}
+                    <tr>
+                        <th scope="row">{{index}}</th>
+                        <td>{{row.0}}</td>
+                        <td>{{row.1}}</td>
+                        <td>{{row.2}}</td>
+                        <td>{{row.3}}</td>
+                    </tr>
+            {% endfor %}    
+        </tbody>
+</table>
+</div>
+<script>
+var level1 = "{{pie.1}}";
+var level2 = "{{pie.2}}";
+var level3 = "{{pie.3}}";
+
+Highcharts.chart('container', {
+  chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+  },
+  title: {
+      text: 'Count of Each Level as Percentage which classifier Predicted as having Purchase Intention.'
+  },
+  tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}</b>'
+  },
+  plotOptions: {
+      pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+              enabled: true,
+              format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+              style: {
+                  color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+              }
+          }
+      }
+  },
+  credits: {
+      enabled: false
+  },
+  series: [{
+      name: 'Purchase Intention',
+      colorByPoint: true,
+      data: [{
+          name: 'Level 1',
+          y:parseInt(level1),
+          sliced: true,
+          selected: true
+      }, {
+          name: 'Level 2',
+          y: parseInt(level2)
+      }, {
+          name: 'Level 3',
+          y: parseInt(level3)
+      }]
+  }]
+});
+</script>
+{% endblock %}

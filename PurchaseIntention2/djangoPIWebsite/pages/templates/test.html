@@ -1,9 +1,9 @@
 {% extends 'navbar.html' %}
 {% block title  %}Machine Learning{% endblock %}
 {% block content %}
-        <h2>Test Your Data</h2> 
+      <div style="float: left; width: 500px;">
         <form action="{% url 'test' %}" method="POST" enctype="multipart/form-data" class="form-horizontal"> 
-            
+            <h2>Test Your Data</h2> 
             <br>
             {% csrf_token %}
              <div class="form-group">
@@ -28,10 +28,100 @@
                  </div>
             {% endif %}    
             <br><br>     
-            <div>
-                <form action="">
-                        <button type="submit" class="btn btn-primary btn-lg">RUN</button>
-                </form>
-            </div>            
+            
+                <form id="form1" action="{% url 'testresult' %}" method="POST">
+                        {% csrf_token %}
+                        <label>Select Machine model for training and testing </label>
+                        <select class="form-control" name="model">
+                        <option>Logistic Regression</option>
+                        <option>SVM</option>
+                        <option>Naive Bayes</option>
+                        <option>Neural Network</option>
+                        <option>Decision Tree</option>
+                        </select>
+                        <br>
+                        <label>Select csv for training </label>
+                        <select class="form-control" name="file1">
+                            {% for file in files %}
+                                {%  for x in file %}
+                                    <option> {{x}} </option>
+                                {% endfor %}    
+                            {% endfor %}
+                        </select>
+                        <br>
 
+                        <label>Select csv for testing </label>
+                        <select class="form-control" name="file2">
+                            {% for file in files %}
+                                {%  for x in file %}
+                                    <option> {{x}} </option>
+                                {% endfor %}    
+                            {% endfor %}
+                        </select>
+                        <br>
+
+                        <label>Select Document Vector</label>
+                        <select class="form-control" name="doc">
+                            <option>TF</option>
+                            <option>TF-IDF</option>
+                        </select>
+                        <br>
+                        <label>Level 1</label>
+                        <select class="form-control" name="level_1" id="level1">
+                            <option>90-100</option>
+                            <option>80-90</option>
+                            <
+                        </select>
+                        <br>
+                        <label>Level 2</label>
+                        <select class="form-control" name="level_2" id="level2">
+                            
+                            <option>70-80</option>
+                            <option>60-70</option>
+                            
+                        </select>
+                        <br>
+                        <label>Level 3</label>
+                        <select class="form-control" name="level_3" id="level3">
+                            <option>50-60</option>
+                            <option>40-50</option>
+                        </select>
+                       
+                        <br>
+                        <div id="myAlert" class="alert alert-danger collapse">
+                            <a id="linkClose" href="#" class="close">&times</a>
+                            <strong>Error!</strong> The Level 1 should be greater than Level 2, and Level 2 should be greater than Level 3
+                        </div>
+                        <button type="submit" id="run" class="btn btn-primary btn-lg">RUN</button>
+                </form>           
+</div>
+<script>
+$("#run").click(function(){
+  var level_1 = $('#level1').val();  
+  var level_2 = $('#level2').val();  
+  var level_3 = $('#level3').val();  
+  var res1 = level_1.split("-", 1);
+  var res2 = level_2.split("-", 1);
+  var res3 = level_3.split("-", 1);
+//   alert(res1+" "+res2+" "+res3);
+  var isValid = 0
+  if ((parseInt(res1) > parseInt(res2)) && (parseInt(res2) > parseInt(res3))) {
+    isValid = 1
+  }
+  if(isValid == 0){
+   
+    $("#myAlert").show('fade');
+    setTimeout(function() {
+        $("#myAlert").hide('fade');
+    },5000);
+  }
+  else if(isValid == 1){
+        $( "#form1" ).submit();
+  }
+  $("#linkClose").click(function(){
+    $("#myAlert").hide('fade');
+  });
+ 
+}); 
+</script>
 {% endblock %}

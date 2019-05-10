@@ -20,7 +20,7 @@ from sklearn.metrics import (
     recall_score,
     precision_score,
 )
-import os
+
 
 def extract(path):
     fd = open(path, encoding="utf-8", errors="replace")
@@ -40,11 +40,10 @@ def extract(path):
 
 
 def report_results(model, X, y):
-    print(X.shape)
-    print(y.shape)
+    # print(X.shape)
+    # print(y.shape)
     pred_proba = model.predict_proba(X)[:, 1]
     pred = model.predict(X)
-    print(type(pred_proba))
     auc = roc_auc_score(y, pred_proba)
     acc = accuracy_score(y, pred)
     f1 = f1_score(y, pred)
@@ -64,11 +63,10 @@ def report_results(model, X, y):
         "TP": tp,
         "True Negative rate": TrueNeg,
     }
-    return result, pred
+    return result, pred, pred_proba
 
 
-def output_to_results(pathData, doc_vector, model):
-    final_data_frame, data_frame_undefined = extract(pathData)
+def data_preprocessing(final_data_frame):
     # -----------------------------------------------------------------------
     # Data cleaning step wise
     # -----------------------------------------------------------------------
@@ -77,20 +75,23 @@ def output_to_results(pathData, doc_vector, model):
         lambda x: " ".join(x.lower() for x in x.split())
     )
     # 2. REMOVE PUNC
-    final_data_frame["text"] = final_data_frame["text"].str.replace("[^\w\s]", "")
+    final_data_frame["text"] = final_data_frame["text"].str.replace(
+        "[^\w\s]", "")
     # 3. STOPWORDS REMOVAL
     stop = stopwords.words("english")
     final_data_frame["text"] = final_data_frame["text"].apply(
         lambda x: " ".join(x for x in x.split() if x not in stop)
     )
     # 4. COMMON WORD REMOVAL
-    freq = pd.Series(" ".join(final_data_frame["text"]).split()).value_counts()[:10]
+    freq = pd.Series(
+        " ".join(final_data_frame["text"]).split()).value_counts()[:10]
     freq = list(freq.index)
     final_data_frame["text"] = final_data_frame["text"].apply(
         lambda x: " ".join(x for x in x.split() if x not in freq)
     )
     # 5. RARE WORDS REMOVAL
-    rare = pd.Series(" ".join(final_data_frame["text"]).split()).value_counts()[-10:]
+    rare = pd.Series(
+        " ".join(final_data_frame["text"]).split()).value_counts()[-10:]
     rare = list(rare.index)
     final_data_frame["text"] = final_data_frame["text"].apply(
         lambda x: " ".join(x for x in x.split() if x not in rare)
@@ -121,68 +122,99 @@ def output_to_results(pathData, doc_vector, model):
         Class_Label[item] for item in final_data_frame.class_label
     ]
     final_data_frame.rename(columns={"class_label": "class"}, inplace=True)
+    return final_data_frame, corpus
+
+
+def output_to_results(pathData_train, pathData_test, doc_vector, model, l1, l2, l3):
+    train_data, train_data_undefined = extract(pathData_train)
+    test_data, test_data_undefined = extract(pathData_test)
+    # temp_text_sr = test_data['text']
+    temp_test_data = test_data.copy(deep=True)
+    train_data, train_corpus = data_preprocessing(train_data)
+    test_data, test_corpus = data_preprocessing(test_data)
     # -----------------------------------------------------------------------
     # Select Document vector
     # -----------------------------------------------------------------------
     if doc_vector == "TF":
         count_vectorizer = CountVectorizer()
-        count_vectorized_data = count_vectorizer.fit_transform(corpus)
-        vectorized_data = count_vectorized_data
+        count_vectorized_data_train = count_vectorizer.fit_transform(train_corpus)
+        vectorized_data_train = count_vectorized_data_train
+        # count_vectorized_data_test = count_vectorizer.fit_transform(test_corpus)
+        count_vectorized_data_test = count_vectorizer.transform(test_corpus)
+        vectorized_data_test = count_vectorized_data_test
     elif doc_vector == "TF-IDF":
         tfidf_vectorizer = TfidfVectorizer()
-        tfidf_vectorized_data = tfidf_vectorizer.fit_transform(corpus)
-        vectorized_data = tfidf_vectorized_data
+        tfidf_vectorized_data_train = tfidf_vectorizer.fit_transform(train_corpus)
+        vectorized_data_train = tfidf_vectorized_data_train
+        tfidf_vectorized_data_test = tfidf_vectorizer.transform(test_corpus)
+        vectorized_data_test = tfidf_vectorized_data_test
     # -----------------------------------------------------------------------
-    # Data split for training/testing
+    # training/testing
     # -----------------------------------------------------------------------
-    print(vectorized_data)
-    X_train, X_test, Y_train, Y_test = train_test_split(
-        vectorized_data, final_data_frame["class"], test_size=0.3, random_state=0
-    )
-    print(Y_test)
+    X_train = vectorized_data_train
+    X_test = vectorized_data_test
+    Y_train = train_data["class"].values
+    Y_test = test_data["class"].values    
     # -----------------------------------------------------------------------
     # Select model to train and display stats
     # -----------------------------------------------------------------------
-    # print(X_train)
-    # stats = dict()
     if model == "SVM":
-        SVM = svm.SVC(probability=True, C=1.0, kernel="linear", degree=3, gamma="auto")
+        SVM = svm.SVC(probability=True, C=1.0,
+                      kernel="linear", degree=3, gamma="auto")
         SVM.fit(X_train, Y_train)
-        stats,pred = report_results(SVM, X_test, Y_test)
+        stats, pred, pred_proba = report_results(SVM, X_test, Y_test)
     elif model == "Naive Bayes":
         Naive = naive_bayes.MultinomialNB()
         Naive.fit(X_train, Y_train)
-        stats,pred = report_results(Naive, X_test, Y_test)
+        stats, pred, pred_proba = report_results(Naive, X_test, Y_test)
     elif model == "Logistic Regression":
         logisticReg = linear_model.LogisticRegression(C=1.0)
         logisticReg.fit(X_train, Y_train)
-        stats,pred = report_results(logisticReg, X_test, Y_test)
+        stats, pred, pred_proba = report_results(logisticReg, X_test, Y_test)
     elif model == "Decision Tree":
         DTC = DecisionTreeClassifier(min_samples_split=7, random_state=252)
         DTC.fit(X_train, Y_train)
-        stats,pred = report_results(DTC, X_test, Y_test)
+        stats, pred, pred_proba = report_results(DTC, X_test, Y_test)
     elif model == "Neural Network":
         neural_network = MLPClassifier(
             solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1
         )
         neural_network.fit(X_train, Y_train)
-        stats,pred = report_results(neural_network, X_test, Y_test)
+        stats, pred, pred_proba= report_results(neural_network, X_test, Y_test)
+        
     # -----------------------------------------------------------------------
-    return stats
-
-
-
-
-
-def read_dir():
+    test_data['Predicted Class'] = pred.tolist()
+    test_data['score'] = pred_proba.tolist()
+    # print(test_data['score'])
+    test_data = test_data.drop(['text'], axis=1)
+    # print(test_data)
     
-    path = "uploadeddata\\"
-    files = []
-    # r=root, d=directories, f = files
-    for r, d, f in os.walk(path):
-        files.append(f)
-    return files
+    test_data['class'].replace(0,"no",inplace=True)
+    test_data['class'].replace(1,"yes",inplace=True)
+    test_data['Predicted Class'].replace(0,"no",inplace=True)
+    test_data['Predicted Class'].replace(1,"yes",inplace=True)
+    test_data['text'] = temp_test_data['text'].tolist()
+    test_data = test_data[['text', 'class', 'Predicted Class', 'score']]
+    # print( test_data)
+    potential_yes =  test_data["Predicted Class"] == "yes"
+    potential_df = test_data[potential_yes]
+    # print(test_data['Predicted Class'])
+    # print(potential_df['score'])
+    level=[]
+    for score in potential_df['score']:
+        if score >= int(l1)/100:
+            level.append("1")
+        elif score >= int(l2)/100 and score < int(l1)/100:
+            level.append("2") 
+        elif score < int(l2)/100:
+            level.append("3") 
+    # print(level)          
+    potential_df['Levels'] = level 
+    potential_df.sort_values(by=['score'], inplace=True, ascending=False)
+    pie_data = potential_df['Levels'].value_counts()         
+    return stats, test_data, potential_df, pie_data
 
 
-# output_to_results("uploadeddata\AnnotatedData2.csv", "TF-IDF", "Naive Bayes")
-# output_to_test("uploadeddata\Annotated4.csv","uploadeddata\AnnotatedData2.csv", "TF-IDF", "Naive Bayes")    
+# result = output_to_results("uploadeddata\Annotated4.csv",
+#                            "uploadeddata\AnnotatedData2.csv", "TF-IDF", "Naive Bayes","90","80","70")
+# # print(result)
