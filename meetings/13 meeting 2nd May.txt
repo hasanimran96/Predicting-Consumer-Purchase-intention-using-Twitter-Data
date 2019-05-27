@@ -1,0 +1,8 @@
+minutes of the meeting:
+    1. imlpemented k-fold for all 5 models
+    2. highest accuracy recoreded --> 79%
+    3. progress of website
+    4. show tweets which predicted results
+    5. show preprocessed tweets
+    6. export all model evaluations to seperate csv files
+    7. update on research paper
