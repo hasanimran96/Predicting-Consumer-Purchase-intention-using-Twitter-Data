@@ -6,3 +6,4 @@ minutes of the meeting:
     5. show preprocessed tweets
     6. export all model evaluations to seperate csv files
     7. update on research paper
+
