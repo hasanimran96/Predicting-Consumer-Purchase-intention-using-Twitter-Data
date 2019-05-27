@@ -226,12 +226,12 @@ print()
 # because it converts the word into its root word,
 # rather than just stripping the suffices.
 
-final_data_frame["text"] = final_data_frame["text"].apply(
-    lambda x: " ".join([Word(word).lemmatize() for word in x.split()])
-)
-print("applied lemmatization")
-print(final_data_frame["text"].head())
-print()
+# final_data_frame["text"] = final_data_frame["text"].apply(
+#     lambda x: " ".join([Word(word).lemmatize() for word in x.split()])
+# )
+# print("applied lemmatization")
+# print(final_data_frame["text"].head())
+# print()
 # ---------------------------------------------------------------------
 
 # ---------------------------------------------------------------------
@@ -319,7 +319,7 @@ dtc.fit(X_train, Y_train)
 # Applying Neural Network
 
 neural_network = MLPClassifier(
-    solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(15, 15, 5), random_state=1
+    solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(50, 20, 10, 5), random_state=1
 )
 neural_network.fit(X_train, Y_train)
 # -------------------------------------------------------------------------

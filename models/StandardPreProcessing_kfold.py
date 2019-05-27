@@ -353,7 +353,7 @@ for train_index, test_index in kf.split(final_data_frame):
     # Applying Neural Network
 
     neural_network = MLPClassifier(
-        solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(15, 15, 5), random_state=1
+        solver="lbfgs", alpha=1e-5, hidden_layer_sizes=(20, 20, 15), random_state=1
     )
     neural_network.fit(X_train, Y_train)
     # -------------------------------------------------------------------------
