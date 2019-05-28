@@ -9,11 +9,12 @@ import enchant
 from stemming.porter2 import stem
 import pathConfig as pc
 
-#--------------------------------
-###Path 
-pathStopwords = pc.PATH_CONFIG['pathStopWords']
-pathData = pc.PATH_CONFIG['pathData']
-#-------------------------------
+# --------------------------------
+# Path
+pathStopwords = "/home/hasan/Desktop/FYP-II/models/stopwords.txt"
+pathData = "/home/hasan/Desktop/FYP-II/data/AnnotatedData3.csv"
+#pathData = "/home/hasan/Desktop/FYP-II/data/Annotated4.csv"
+# -------------------------------
 
 
 class DataCLean:
@@ -48,8 +49,7 @@ class DataCLean:
         li_stopwords = stopword[0].split()
         return li_stopwords
 
-
-    def removeStopWords(self,text):
+    def removeStopWords(self, text):
         # stop_words = set(stopwords.words('english'))
         stop_words = self.read_stopwords(pathStopwords)
         word_tokens = word_tokenize(text)
@@ -72,7 +72,8 @@ class DataCLean:
                 if w.lower() not in li_stopwords:
                     clean_text = clean_text + w.lower() + ' '
             df_punc_remove.at[count_clean, 'text'] = clean_text
-            df_punc_remove.at[count_clean, 'class'] = df_punc_remove.iloc[count_clean]['class']
+            df_punc_remove.at[count_clean,
+                              'class'] = df_punc_remove.iloc[count_clean]['class']
             count_clean += 1
         # return list of corpus without stop words in a list.
         # print(df_punc_remove)
@@ -92,7 +93,7 @@ class DataCLean:
         count = 0
         for text in temp_df['text']:
             out = re.sub(r'[^\w\s]', '', text)
-            temp_df.at[count,'text'] = out
+            temp_df.at[count, 'text'] = out
             temp_df.at[count, 'class'] = temp_df.iloc[count]['class']
             count += 1
         return temp_df
@@ -103,46 +104,47 @@ class DataCLean:
         for text in final_df['text']:
             temp = ""
             for char in text:
-                if char in [",",".","!","?",":",";"]:
+                if char in [",", ".", "!", "?", ":", ";"]:
                     temp = temp + ' ' + char
 
                 else:
                     temp = temp + char
             # print(temp)
             new_df.at[count_tweets, 'text'] = temp
-            new_df.at[count_tweets, 'class'] = final_df.iloc[count_tweets]['class']
+            new_df.at[count_tweets,
+                      'class'] = final_df.iloc[count_tweets]['class']
             count_tweets += 1
         # print("new_df")
         # print(new_df)
         return new_df
 
     def handle_negation(self, final_df):
-            out_df = pd.DataFrame()
-            count_tweet = 0
-            for text in final_df['text']:
-                temp_text = ""
-                li_text = text.split()
-                for word in li_text:
-                    count = 0
-                    lower_word = word.lower()
-                    if lower_word == "didn't" or lower_word == "not" or lower_word == "no" or lower_word == "never"\
-                            or lower_word == "don't" or lower_word == "hate":
-                        temp = count + 1
-                        temp_text = temp_text + word + " "
-                        for i in range(temp,len(li_text)):
-                            if li_text[i] in [",","?","!","."]:
-                                temp_text = " "+temp_text + li_text[i] + " "
-                                break
-                            else:
-                                temp_text = temp_text + "NOT_" + li_text[i]+" "
+        out_df = pd.DataFrame()
+        count_tweet = 0
+        for text in final_df['text']:
+            temp_text = ""
+            li_text = text.split()
+            for word in li_text:
+                count = 0
+                lower_word = word.lower()
+                if lower_word == "didn't" or lower_word == "not" or lower_word == "no" or lower_word == "never"\
+                        or lower_word == "don't" or lower_word == "hate":
+                    temp = count + 1
+                    temp_text = temp_text + word + " "
+                    for i in range(temp, len(li_text)):
+                        if li_text[i] in [",", "?", "!", "."]:
+                            temp_text = " "+temp_text + li_text[i] + " "
+                            break
+                        else:
+                            temp_text = temp_text + "NOT_" + li_text[i]+" "
 
-                    else:
-                        temp_text = temp_text + word + " "
-                # print(temp_text)
-                out_df.at[count_tweet, 'text'] = temp_text
-                out_df.at[count_tweet,'class'] = final_df.iloc[count_tweet]['class']
-                count_tweet += 1
-            return out_df
+                else:
+                    temp_text = temp_text + word + " "
+            # print(temp_text)
+            out_df.at[count_tweet, 'text'] = temp_text
+            out_df.at[count_tweet, 'class'] = final_df.iloc[count_tweet]['class']
+            count_tweet += 1
+        return out_df
 
     def check_english(self, temp_df):
         d = enchant.Dict("en_US")
@@ -157,7 +159,7 @@ class DataCLean:
                     # print("ammar")
                     temp_sent = temp_sent + temp + " "
             # print(temp_sent)
-            new_eng.at[count,'text'] = temp_sent
+            new_eng.at[count, 'text'] = temp_sent
             new_eng.at[count, 'class'] = temp_df.iloc[count]['class']
             count += 1
         # print(new_eng)
@@ -201,7 +203,7 @@ class DataCLean:
         unique_word_li = list(unique_words_set)
         return unique_word_li
 
-    def stemmed(self,li_cleanText):
+    def stemmed(self, li_cleanText):
         count_stemed = 0
         for word in li_cleanText:
             if word[-1] == "s":
