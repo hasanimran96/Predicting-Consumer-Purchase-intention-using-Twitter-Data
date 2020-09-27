@@ -1,6 +1,7 @@
 ﻿
-# FYP-II
-## All material related to Final Year Project II will be uploaded here
+# Consumer Intention Prediction 
+## FYP-II
+### All material related to Final Year Project II will be uploaded here
 
 # Project Details:
 1. Scrap twitter tweets data and use twitter search API to build a dataset.
