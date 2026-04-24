@@ -114,6 +114,31 @@ exit()
 
 ---
 
+## 🤝 Contributing
+
+Contributions are welcomed and encouraged! Whether it's fixing a bug, improving the documentation, adding a new feature, or suggesting enhancements — all input is appreciated.
+
+To contribute:
+
+1. **Fork** this repository.
+2. **Create a new branch** for your feature or fix:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. **Make your changes** and commit them with a clear message:
+   ```bash
+   git commit -m "Add: description of your change"
+   ```
+4. **Push** your branch to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. **Open a Pull Request** against the `main` branch of this repository and describe what you've changed.
+
+Please make sure your contributions align with the project goals and maintain code quality. For major changes, consider opening an issue first to discuss your proposal.
+
+---
+
 ## 📜 License
 
 This project is licensed under the terms of the [LICENSE](LICENSE) file included in this repository.
