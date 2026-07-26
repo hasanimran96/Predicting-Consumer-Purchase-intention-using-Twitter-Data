@@ -40,6 +40,21 @@ This project leverages **Twitter data** and **machine learning** to predict whet
 
 ---
 
+## Optional TweetClaw Export Preparation
+
+Use [TweetClaw](https://github.com/Xquik-dev/tweetclaw) exports as reviewed
+source material when you need fresh X/Twitter examples in the same `class,text`
+schema used by `data/Annotated4.csv`.
+
+```bash
+python scripts/tweetclaw_to_purchase_intention_csv.py exports/tweetclaw-phone.jsonl data/tweetclaw_purchase_intention.csv --class-label yes
+```
+
+Only append rows after reviewing each exported post and choosing the `yes` or
+`no` purchase-intention label it should carry in model training or testing.
+
+---
+
 ## ⚙️ Setting Up Dependencies
 
 Make sure you have **Python (latest version)** installed, then install the required packages.
